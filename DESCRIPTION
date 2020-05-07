@@ -1,0 +1,17 @@
+Package: RchivalTag
+Type: Package
+Title: Analyzing Archival Tagging Data
+Version: 0.1.2
+Date: 2020-03-23
+Author: Robert Bauer
+Maintainer: Robert Bauer <marine.biologging@gmail.com>
+Description: A set of functions to generate, access and analyze standard data products from archival tagging data.
+Depends: R (>= 3.5.0)
+Imports: plyr, maptools, graphics, stats, raster, readr, rgeos, ncdf4, pracma,
+        maps, mapdata, grDevices, oceanmap, sp, methods, PBSmapping
+License: GPL (>= 3)
+LazyLoad: yes
+Packaged: 2020-03-23 14:51:41 UTC; work
+Repository: CRAN
+Date/Publication: 2020-03-23 14:03:00
+NeedsCompilation: no
