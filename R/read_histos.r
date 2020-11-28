@@ -63,7 +63,7 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
         if(any(is.na(add0$datetime))) stop('Date-vector not in correct format (',date_format,')! Please choose a format corresponding to "',add0$Date[1],'".')
         add0$date <- as.Date(add0$datetime)
         if(!missing(dep.end)){
-          add0 <- add0[which(add0$date <= dep.end),]
+          add0 <- add0[which(add0$date < dep.end),]
         }
         
         info <- add0[,which(names(add0) %in% c(identifiers,'date','datetime',"Sum"))]

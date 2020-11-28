@@ -30,11 +30,12 @@ hist_tad(df,
             xlab.side=3, xlab.line=2.5, xlab.font=1,
             xlab2.side=1, xlab2.line=1, xlab2.font=2,
             main.side=3, main.line=3.8, main.font=1,
-            col=c("darkgrey", "white"), 
+            col=c("darkgrey", "white"),
+            xticks,
             do_mid.ticks=TRUE, yaxis.pos=0, 
-            mars,
-            plot_sd=TRUE, plot_nrec=TRUE, plot_ntags=TRUE,
-            cex=1.2, cex.main=cex, cex.lab=cex, cex.inf=cex, 
+            mars, space=0,
+            plot_sd=TRUE, plot_se, plot_nrec=TRUE, plot_ntags=TRUE,
+            cex=1.2, cex.main=cex, cex.lab=cex, cex.inf=cex,cex.axis=1, 
             return.sm=FALSE, 
             subplot=FALSE, inside=FALSE,Type="TAD")
 } 
@@ -99,6 +100,10 @@ side, line and font of plot title.
 colours to be used for the TaD-histogram, by default 'grey' and 'white' (corresponding to the values of split_by/split_levels).
 }
 
+\item{xticks}{
+tick labels of the x-axis. 
+}
+
 \item{do_mid.ticks}{
 whether centered tick-labels, indicating the depth range of histogram cells, shall be plotted (by default \code{FALSE}). Alternatively, tick labels will be indicated at the breakpoints of the histrogram cells.
 }
@@ -111,12 +116,16 @@ x-axis coordinate at which the y-axis should be plotted (by default xlim[1], and
 a numerical vector of the form \code{c(bottom, left, top, right)}, decribing the number of margin lines to be specified on the each side of the plot. The default is \code{c(2.1, 4.1, 6.1, 2.1)}. In case that \code{do_mid.ticks} is \code{TRUE} margins are: \code{c(2.1, 8, 6.1, 2.1)}.
 }
 
-\item{plot_sd, plot_nrec , plot_ntags}{
-whether standard deviation bars, the number of records and tags shall be plotted (default is \code{TRUE}) inside the TaD/TaT histogram.
+\item{space}{
+the space between the histogram bars.
 }
 
-\item{cex, cex.main, cex.lab, cex.inf}{
-font size of the title (\code{cex.main}), x- and y-axes labels (\code{cex.lab}), and other labels, like the number of records (\code{cex.inf}).
+\item{plot_sd, plot_se, plot_nrec , plot_ntags}{
+whether standard deviation or standard error bars, the number of records and tags shall be plotted (default is \code{TRUE}) inside the TaD/TaT histogram. (if plot_se is \code{TRUE}, plot_sd will be overwritten!).
+}
+
+\item{cex, cex.main, cex.lab, cex.inf, cex.axis}{
+font size of the title (\code{cex.main}), x- and y-axes labels (\code{cex.lab}), other labels, like the number of records (\code{cex.inf}) as well as of the tick marks.
 }
 
 \item{return.sm}{

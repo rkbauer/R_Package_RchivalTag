@@ -3,6 +3,16 @@ RchivalTag versions
 upcoming:
 	- add argument "show_time_limits" in plot_TS/DepthTS
 
+RchivalTag_0.1.34 -- August 27, 2020 (Robert Bauer)
+        - added ggplot_geopos function, replacing former function plot_geopos
+
+RchivalTag_0.1.3 -- July 20, 2020 (Robert Bauer)
+        - added plot_data_coverage
+	- added some additional arguments to hist_tad and hist_tat
+
+RchivalTag_0.1.2 -- June 17, 2020 (Robert Bauer)
+        - added dygraph version of plot_DepthTS
+
 RchivalTag_0.1.1 -- February 7, 2020 (Robert Bauer)
         - added min_perc argument in hist_tad, hist_tat and ts2histos-function to define a minimum data coverage for histogram entries obtained through time series data.
         - added new function read_TS to read in time series data

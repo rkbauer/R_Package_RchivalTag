@@ -95,6 +95,8 @@
   return(Dat)
 }
 
+.date2year <- function(x) as.numeric(format(x,"%Y"))
+
 .date2datetime <- function(x,tz="",midday=T){
   
   sstart <- 12

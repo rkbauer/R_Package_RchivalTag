@@ -1,7 +1,7 @@
 
 image_TempDepthProfiles <- function(x, main=NULL, xlab='Date', ylab="Depth (m)", 
                                     cb.xlab=expression(paste("Temperature (",degree,"C)")), cex.cb.xlab=1, cex.cb.ticks=1,
-                                    xlim, ylim, zlim, pal="jet", only.months, month.line=0, mars, ...){
+                                    xlim, ylim, zlim, pal="jet", only.months, month.line=0, mars, axes=TRUE, do.colorbar=TRUE,...){
   cmap <- NULL
   if(is.character(pal) & length(pal) == 1){
     data("cmap", package='oceanmap', envir = environment())
@@ -24,8 +24,8 @@ image_TempDepthProfiles <- function(x, main=NULL, xlab='Date', ylab="Depth (m)",
   image(x$Date, x$Depth, z, main=main, xlab=xlab, ylab=ylab, xlim=xlim, ylim=ylim, zlim=zlim, col=pal, axes=F)
   xlim_num <- as.numeric(xlim)
   if(missing(only.months)) only.months <- (xlim_num[2]-xlim_num[1]) > 93
-  .dates.axis(xlim, only.months = only.months, month.line=month.line,do_mid.ticks=T) 
-  oceanmap::set.colorbarp(cbxp = c(84,86), cby=c(12,90), pal = pal, zlim=zlim, cb.xlab=cb.xlab, cex.cb.xlab=cex.cb.xlab, cex.cb.ticks=cex.cb.ticks,...)
+  if(axes) .dates.axis(xlim, only.months = only.months, month.line=month.line,do_mid.ticks=T) 
+  if(do.colorbar) oceanmap::set.colorbarp(cbxp = c(84,86), cby=c(12,90), pal = pal, zlim=zlim, cb.xlab=cb.xlab, cex.cb.xlab=cex.cb.xlab, cex.cb.ticks=cex.cb.ticks,...)
 }
 
 

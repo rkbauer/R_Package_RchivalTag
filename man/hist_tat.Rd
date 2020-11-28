@@ -93,6 +93,10 @@ side, line and font of plot title.
 colours to be used for the TaD-histogram, by default 'grey' and 'white' (corresponding to the values of split_by/split_levels).
 }
 
+\item{xticks}{
+tick labels of the x-axis. 
+}
+
 \item{do_mid.ticks}{
 whether centered tick-labels, indicating the depth range of histogram cells, shall be plotted (by default \code{FALSE}). Alternatively, tick labels will be indicated at the breakpoints of the histrogram cells.
 }
@@ -105,8 +109,12 @@ x-axis coordinate at which the y-axis should be plotted (by default xlim[1], and
 a numerical vector of the form \code{c(bottom, left, top, right)}, decribing the number of margin lines to be specified on the each side of the plot. The default is \code{c(2.1, 4.1, 6.1, 2.1)}. In case that \code{do_mid.ticks} is \code{TRUE} margins are: \code{c(2.1, 8, 6.1, 2.1)}.
 }
 
-\item{plot_sd, plot_nrec , plot_ntags}{
-whether standard deviation bars, the number of records and tags shall be plotted (default is \code{TRUE}) inside the TaD/TaT histogram.
+\item{space}{
+the space between the histogram bars.
+}
+
+\item{plot_sd, plot_se, plot_nrec , plot_ntags}{
+whether standard deviation or standard error bars, the number of records and tags shall be plotted (default is \code{TRUE}) inside the TaD/TaT histogram. (if plot_se is \code{TRUE}, plot_sd will be overwritten!).
 }
 
 \item{cex, cex.main, cex.lab, cex.inf}{

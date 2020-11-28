@@ -20,9 +20,18 @@
     c(unlist(sd.list),nrec=nrow(x))
   })
   
+  op3 <- plyr::ddply(tad.df,c(vars),function(x){
+    output <- se.list <- list()
+    for(y in treat.vars) {
+      se.list[[y]] <- sd(x[[y]],na.rm=T)/sqrt(length(x[[y]]))   
+    }
+    c(unlist(se.list),nrec=nrow(x))
+  })
+  
   op$info <- 'mean'
   op2$info <- 'sd'
-  op <- rbind(op,op2)
+  op3$info <- 'se'
+  op <- rbind(op,op2,op3)
   
   if(length(vars) == 0) op[,1] <- c()
   

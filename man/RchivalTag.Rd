@@ -5,7 +5,7 @@
 RchivalTag - Analyzing Archival Tagging Data
 }
 \description{
-\code{RchivalTag} provides a set of functions to analyze and visualize (aquatic) archival tagging data, including:
+\code{RchivalTag} provides a set of functions to analyze and visualize different data products from Archival Tags (Supported Models include amongst others: MiniPAT, sPAT, mk10, mk9 from \href{http://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
 
 \itemize{
   \item{"(Depth) time series data"} (See \link{empty.plot_TS}, \link{plot_TS} & \link{plot_DepthTS})

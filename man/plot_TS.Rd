@@ -36,7 +36,7 @@ plot_TS(ts_df, y="Depth", xlim, ylim, xticks_interval,
 empty.plot_TS(xlim, ylim, xticks_interval, ylab="", xlab="Time (UTC)", main="",
               cex=1, cex.main=1.2*cex, cex.lab=1*cex, 
               cex.axis=.9*cex, cex.axis2=1*cex,               
-              las=1, xaxs="i", yaxs="i", do_yaxis = TRUE,
+              las=1, xaxs="i", yaxs="i", do_xaxis=TRUE, do_yaxis = TRUE,
               plot_box=TRUE, bty="l", ...)
 }
  
@@ -109,7 +109,7 @@ whether day-time periods ('Night', 'Dawn', 'Day', 'Dusk') should be plotted as s
 If any of the day-time columns, described above, is missing, it/they will be calculated based on geolocation estimates (required columns \code{Lon} and \code{Lat}) through an internal call of function \code{get_DayTimeLimits}.\cr
 }
 
-\item{do_yaxis}{Optional argument in empty.plot_TS to define whether a y-axis shall be plotted (by default \code{TRUE}).
+\item{do_xaxis,do_yaxis}{Optional arguments in empty.plot_TS to define whether a x and and y-axis shall be plotted (by default \code{TRUE}).
 }
 
 \item{plot_box, bty}{
@@ -126,7 +126,7 @@ additional arguments to be passed to \link{plot}.
 }
 }
 
-\seealso{\link{hist_tad}, \link{hist_tat}} 
+\seealso{\link{dy_DepthTS}, \link{plot_DepthTempTS}} 
 
 
 \author{

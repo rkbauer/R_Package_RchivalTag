@@ -7,7 +7,7 @@ reads Time Series Data from Archival Tags
 }
 
 \description{
-reads Time Series Data (e.g. Depth and Temperature) from Archival Tags (Supported Models: MiniPAT, mk10, mk9 of \href{http://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
+reads Time Series Data (e.g. Depth and Temperature) from Archival Tags (Supported Models: MiniPAT, sPAT, recovered mk10, mk9 from \href{http://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
 }
 
 \usage{

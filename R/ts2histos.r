@@ -25,7 +25,7 @@ ts2histos <- function(ts_df, tad_breaks=NULL, tat_breaks=NULL, split_by=NULL, ag
         bin_breaks <- c(-5, bin_breaks)
       }else{
         bin_breaks <- bin_breaks[bin_breaks >=0]
-        bin_breaks <- c(0, bin_breaks)
+        if(field != "Temperature") bin_breaks <- c(0, bin_breaks)
       }
       bin_breaks <- unique(bin_breaks)
       

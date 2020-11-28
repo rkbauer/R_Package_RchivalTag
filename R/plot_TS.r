@@ -1,7 +1,7 @@
 
 empty.plot_TS <- function(xlim, ylim, xticks_interval, ylab="", xlab="Time (UTC)", main="",
                           cex=1, cex.main=1.2*cex, cex.lab=1*cex, cex.axis=.9*cex, cex.axis2=1*cex, 
-                          las=1, xaxs="i", yaxs="i", do_yaxis=TRUE,
+                          las=1, xaxs="i", yaxs="i", do_xaxis=TRUE, do_yaxis=TRUE,
                           plot_box=TRUE, bty="l", ...){
   
   if(class(xlim)[1] == 'Date' | nchar(as.character(xlim[1])) == 10){
@@ -39,8 +39,8 @@ empty.plot_TS <- function(xlim, ylim, xticks_interval, ylab="", xlab="Time (UTC)
   #   }
   par(las=las, yaxs=yaxs, xaxs=xaxs, ...)
   plot(0, 1, axes=FALSE, xlab="", ylab=ylab, ylim=ylim, xlim=xlim, cex.lab=cex.lab,...)
-  axis(1, at=xticks[xti], labels=xtick.labels[xti], xpd=TRUE, pos=ylim[1], cex.axis=cex.axis, lwd=0, lwd.ticks = 1)
-  axis(1, at=date.ticks, labels=format(date.ticks, "%Y-%m-%d"), lwd=0, line=1, cex.axis=cex.axis2)
+  if(do_xaxis) axis(1, at=xticks[xti], labels=xtick.labels[xti], xpd=TRUE, pos=ylim[1], cex.axis=cex.axis, lwd=0, lwd.ticks = 1)
+  if(do_xaxis) axis(1, at=date.ticks, labels=format(date.ticks, "%Y-%m-%d"), lwd=0, line=1, cex.axis=cex.axis2)
   if(do_yaxis) axis(2, lwd = 0, lwd.ticks=1)
   if(!missing(main)) title(main = main,cex.main=cex.main)
   if(plot_box) box(bty=bty)
