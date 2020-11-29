@@ -3,7 +3,7 @@ hist_tat <- function(df,
                      bin_breaks=NULL, bin_prefix="Bin", 
                      main, xlab="Time at Temperature (%)", ylab=expression(paste("Temperature (",degree,"C)")), labeling=TRUE,
                      Type="TAT", ...) {
-  hist_tad(df=df, bin_breaks=bin_breaks, bin_prefix=bin_prefix, 
+  hist_tad(df=df, bin_breaks=bin_breaks, bin_prefix=bin_prefix,
            main=main, xlab=xlab, ylab=ylab, labeling=labeling, Type=Type, ...)
 }
 
@@ -19,7 +19,7 @@ hist_tad <- function(df,
                      xlab2.side=1, xlab2.line=1, xlab2.font=2,
                      main.side=3, main.line=3.8, main.font=1,
                      col=c("darkgrey", "white"), 
-                     xticks,
+                     xticks, ylabels,
                      do_mid.ticks=TRUE, yaxis.pos=0, 
                      mars, space=0, 
                      #                      do.last.bin=FALSE, do.greater.than.sign=TRUE, 
@@ -202,7 +202,9 @@ hist_tad <- function(df,
         
         if(do_mid.ticks){
           axis(2, pos=0, at=AT, labels=rep("", length(AT)), las=1,cex.axis=cex.axis)
-          # axis(2, pos=0, at=1:(length(bin_breaks)), labels=rep("", length(tick.labels)), las=1)        
+          # axis(2, pos=0, at=1:(length(bin_breaks)), labels=rep("", length(tick.labels)), las=1)
+          ylabels_keep <- tick.labels
+          if(!missing(ylabels)) ylabels_keep <- ylabels
           ylabels <- rev(tick.labels)
 
           # old code: ylabels2 <- cbind(c(intToUtf8(8805), ylabels[2:length(ylabels)]+1), c(ylabels[1], ylabels[1:length(ylabels)-1]))
@@ -210,13 +212,17 @@ hist_tad <- function(df,
           ylabels2[nrow(ylabels2),1] <- tail(ylabels,1)
           ylabels2a <- apply(ylabels2, 1, function(x) paste(x[1], x[2], sep=""))
           ylabels2a <- apply(ylabels2, 1, function(x) paste(x[1], x[2], sep="-"))
-          # axis(2, pos=xlim[1]+yaxis.pos, at=(0.5:(ncol(raw)-0.5)), lwd="", labels=ylabels2a, las=1)
-          
-          # axis(2, pos=xlim[1]+yaxis.pos, at=(1.5:(ncol(raw)-.5)), lwd="", labels=ylabels2a, las=1)
+          ylabels2a[which(!(ylabels %in% ylabels_keep))-1] <- ""
+        
           axis(2, pos=xlim[1]+yaxis.pos, at=bbins[2:length(bbins)], lwd="", labels=ylabels2a, las=1,cex.axis=cex.axis)
           
         }else{
-          axis(2, pos=0, at=AT, labels=rev(tick.labels), las=1,cex.axis=cex.axis)
+          ylabels_keep <- tick.labels
+          if(!missing(ylabels)) ylabels_keep <- ylabels
+          ylabels <- rev(tick.labels)
+          ylabels[which(!(ylabels %in% ylabels_keep))] <- ""
+          
+          axis(2, pos=0, at=AT, labels=ylabels, las=1,cex.axis=cex.axis)
           # axis(2, pos=0, at=AT, labels=rev(tick.labels), las=1)
           
         }

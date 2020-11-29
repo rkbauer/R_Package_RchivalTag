@@ -93,8 +93,8 @@ side, line and font of plot title.
 colours to be used for the TaD-histogram, by default 'grey' and 'white' (corresponding to the values of split_by/split_levels).
 }
 
-\item{xticks}{
-tick labels of the x-axis. 
+\item{xticks, ylabels}{
+tick labels of the x-axis and ylabels of the y-axis to show in the plot.
 }
 
 \item{do_mid.ticks}{

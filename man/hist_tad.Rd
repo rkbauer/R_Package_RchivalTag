@@ -31,7 +31,7 @@ hist_tad(df,
             xlab2.side=1, xlab2.line=1, xlab2.font=2,
             main.side=3, main.line=3.8, main.font=1,
             col=c("darkgrey", "white"),
-            xticks,
+            xticks, ylabels,
             do_mid.ticks=TRUE, yaxis.pos=0, 
             mars, space=0,
             plot_sd=TRUE, plot_se, plot_nrec=TRUE, plot_ntags=TRUE,
@@ -100,8 +100,8 @@ side, line and font of plot title.
 colours to be used for the TaD-histogram, by default 'grey' and 'white' (corresponding to the values of split_by/split_levels).
 }
 
-\item{xticks}{
-tick labels of the x-axis. 
+\item{xticks, ylabels}{
+tick labels of the x-axis and ylabels of the y-axis to show in the plot.
 }
 
 \item{do_mid.ticks}{
