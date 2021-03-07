@@ -89,7 +89,7 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   }
   
   if(tolower(type) %in% c("tad","tat")){
-    if(missing(type2)) type2 <- "nperc_24h"
+    if(missing(type2)) type2 <- "nperc_dat"
     
     tads <- x[[toupper(type)]]
     tags <- names(tads)

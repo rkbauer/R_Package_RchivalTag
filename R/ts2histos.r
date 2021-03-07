@@ -58,7 +58,7 @@ ts2histos <- function(ts_df, tad_breaks=NULL, tat_breaks=NULL, split_by=NULL, ag
         SD <- sd(x[[field]],na.rm=T)
         sm <- cbind(Sum=100,sm,avg=avg,SD=SD,nrec=nrec,duration=duration)#NumBins=length(bin_breaks),
       })
-      sm.df$nperc_24h <- round(100*sm.df$nrec/sm.df$duration,1)
+      sm.df$nperc_dat <- round(100*sm.df$nrec/sm.df$duration,1)
       sm.df$datetime <- .date2datetime(sm.df$date,tz = "UTC",midday = F)
       if(is.null(sm.df$Ptt)) sm.df$Ptt <- NA
       
@@ -79,24 +79,30 @@ ts2histos <- function(ts_df, tad_breaks=NULL, tat_breaks=NULL, split_by=NULL, ag
           warning("Returning raw data")
         }else{
           
-          h <- ddply(df[,c("DeployID","Ptt","nperc_24h")],c("DeployID","Ptt"),function(x){
-            ii <- x$nperc_24h < min_perc
+          h <- ddply(df[,c("DeployID","Ptt","nperc_dat")],c("DeployID","Ptt"),function(x){
+            ii <- x$nperc_dat < min_perc
             c(kept=nrow(x[!ii,]),omitted=nrow(x[ii,]))})
           warning(message(paste0("Omitted the following number of ",Type," entries based on min_perc=",min_perc," argument!\n",paste0(capture.output(h), collapse = "\n"))))
-          df <- df[which(df$nperc_24h >= min_perc),]
+          df <- df[which(df$nperc_dat >= min_perc),]
           output[[Type]][["merged"]]$df <- df
         }
       }
       
       df$Type <- Type
-      df_combined <- rbind(df_combined,df[,c("DeployID","Ptt","nperc_24h","Type")])
+      df_combined <- rbind(df_combined,df[,c("DeployID","Ptt","nperc_dat","Type")])
     }
   }
-  h <- ddply(df_combined,c("DeployID","Ptt","Type"),function(x){n=nrow(x); c(p0_25=round(100*nrow(x[which(x$nperc_24h <= 25),])/n,1),
-                                                                             p0_50=round(100*nrow(x[which(x$nperc_24h <= 50),])/n,1),
-                                                                             p0_75=round(100*nrow(x[which(x$nperc_24h <= 75),])/n,1),
-                                                                             p0_90=round(100*nrow(x[which(x$nperc_24h <= 90),])/n,1))})
-  if(any(h$p0_90 > 50) & missing(min_perc)) stop(paste("High percentage of missing data in at least one individual. please revise (e.g. filter with 'min_perc' argument)!\n", 
+  h <- ddply(df_combined,c("DeployID","Ptt","Type"),function(x){n=nrow(x); c(nrecs0_25=nrow(x[which(x$nperc_dat <= 25),]),
+                                                                             nrecs0_50=nrow(x[which(x$nperc_dat <= 50),]),
+                                                                             nrecs0_75=nrow(x[which(x$nperc_dat <= 75),]),
+                                                                             nrecs0_90=nrow(x[which(x$nperc_dat <= 90),]),
+                                                                             nrecs_all=n,
+                                                                             perc0_25=round(100*nrow(x[which(x$nperc_dat <= 25),])/n,1),
+                                                                             perc0_50=round(100*nrow(x[which(x$nperc_dat <= 50),])/n,1),
+                                                                             perc0_75=round(100*nrow(x[which(x$nperc_dat <= 75),])/n,1),
+                                                                             perc0_90=round(100*nrow(x[which(x$nperc_dat <= 90),])/n,1)
+                                                                             )})
+  if(any(h$perc0_90 > 50) & missing(min_perc)) stop(paste("High percentage of missing data in at least one individual (e.g. nrecs0_25 and perc0_25 correspond to the number and percentage of days or daytime periods with less than 25% of missing data). Please revise (e.g. filter with 'min_perc' argument)!\n", 
                                    message(paste0(capture.output(h), collapse = "\n"))))
   return(output)
 }

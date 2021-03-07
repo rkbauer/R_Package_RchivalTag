@@ -3,8 +3,10 @@ RchivalTag versions
 upcoming:
 	- add argument "show_time_limits" in plot_TS/DepthTS
 
-RchivalTag_0.1.34 -- August 27, 2020 (Robert Bauer)
+RchivalTag_0.1.4 -- August 27, 2020 (Robert Bauer)
         - added ggplot_geopos function, replacing former function plot_geopos
+	- added ggplotly_geopos function
+	- added leaflet_geopos function
 
 RchivalTag_0.1.3 -- July 20, 2020 (Robert Bauer)
         - added plot_data_coverage

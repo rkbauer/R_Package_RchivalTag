@@ -1,8 +1,9 @@
 get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", proj4string, prob_lim=.5){
   file <- x
+  if(!file.exists(x)) stop(paste("The file", file, "does not exist in the current working directory. Please revise!"))
   if(missing(date_format)) date_format <- "%d-%b-%Y %H:%M:%S"
   if (missing(proj4string)) proj4string <- sp::CRS(as.character(NA))
-  
+  cat(paste0("Loading tagging tracks from file: ",file,"\n"))
   if(substr(file,nchar(file)-2,nchar(file)) == "csv"){
     #### check for header line:
     skip <- -1
@@ -12,9 +13,26 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
       header0 <- as.character(unlist(read.delim(file,sep=",",header=F,nrows=1,skip=skip,stringsAsFactors=F)))
       header_found <- any(grepl("Most.Likely",header0))
     }
-    pos <- read.csv(file, header=T,sep=',', skip=skip)
     
-    head(pos)
+    info_raw <- readLines(file,n = 3)
+    taginfo <- data.frame(file=file, Serial=NA, speed=NA, score=NA, stringsAsFactors = F)
+    # if(grepl('PTT ',info_raw))){
+    #   taginfo$DeployID <- taginfo$Ptt <- strsplit(strsplit(info_raw,"PTT ")[[1]][2],",")[[1]][1]
+    # }
+    if(any(grepl('Serial ',info_raw))){
+      taginfo$Serial <- strsplit(strsplit(info_raw,"Serial ")[[1]][2],",")[[1]][1]
+    }
+    if(any(grepl('@ ',info_raw))){
+      taginfo$speed <- strsplit(strsplit(info_raw,"@ ")[[2]][2],",")[[1]][1]
+    }
+    if(any(grepl(' Model Score ',info_raw))){
+      taginfo$score <- strsplit(strsplit(info_raw," Model Score ")[[2]][2],"\\. ")[[1]][1]
+      taginfo$score <- gsub('\"',"",taginfo$score)
+    }
+    
+    pos <- read.csv(file, header=T,sep=',', skip=skip,stringsAsFactors = F)
+    pos <- cbind(pos,taginfo)
+    # head(pos)
     names(pos) <- gsub('Most.Likely.', '', names(pos))
     names(pos) <- gsub('gitude', '', names(pos))
     names(pos) <- gsub('itude', '', names(pos))
@@ -67,9 +85,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
       
       RasterVals <- sort(Raster.HR@data@values) #sort the probability values
       Raster.breaks <- c(RasterVals[max(which(cumsum(RasterVals)<=(1-prob_lim)))])
-      cl <- try(rasterToContour(Raster.HR,levels = Raster.breaks),silent = T)
-      cl
-
+      cl <- try(raster::rasterToContour(Raster.HR,levels = Raster.breaks),silent = T)
       
       cl0 <- cl
       if(class(cl) != "try-error"){
@@ -82,17 +98,36 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
         }else{
           pols@polygons[[j]] <- spolys@polygons[[1]]
         }
-        
         j <- j +1
-        # save(spolys,file="~/Desktop/test.rd")
-        # pols[[datetime[i]]] <- spolys
       }
     }
-    projection(pols) <- proj4string
-    pols_joined <- pols
-    # pols_joined <- SpatialPolygons(lapply(pols, function(x){x@polygons[[1]]}))
-    out <- pols_df <- SpatialPolygonsDataFrame(Sr=pols_joined, data=data.frame(file=file,prob_lim=prob_lim,datetime=datetime,
-                                                                               xmin=xlim[1],xmax=xlim[2],ymin=ylim[1],ymax=ylim[2]),match.ID = FALSE)
+    # pols@plotOrder <- spolys@plotOrder
+    # rgeos::gBuffer(spTransform(pols, CRS(paste(proj4string(pols)))),0,byid = F)
+    # which(!.clgeo_CollectionReport(pols)$valid)
+    # 
+    pols_joined <- .check_and_fill_holes(pols)
+    sp::proj4string(pols_joined) <- sp::proj4string(pols)
+    
+    info_raw <- ncdf4::ncatt_get(nc,0)$comments
+    taginfo <- data.frame(file=file, DeployID=NA, Ptt=NA, Serial=NA, speed=NA, score=NA, stringsAsFactors = F)
+    if(grepl('PTT ',info_raw)){
+      taginfo$DeployID <- taginfo$Ptt <- strsplit(strsplit(info_raw,"PTT ")[[1]][2],",")[[1]][1]
+    }
+    if(grepl('Serial ',info_raw)){
+      taginfo$Serial <- strsplit(strsplit(info_raw,"Serial ")[[1]][2],",")[[1]][1]
+    }
+    if(grepl('@ ',info_raw)){
+      taginfo$speed <- strsplit(strsplit(info_raw,"@ ")[[1]][3],",")[[1]][1]
+    }
+    if(grepl(' Model Score ',info_raw)){
+      taginfo$score <- strsplit(strsplit(info_raw," Model Score ")[[1]][2],"\\. ")[[1]][1]
+    }
+    
+    add <- data.frame(file=file,prob_lim=prob_lim,datetime=datetime,
+                      xmin=xlim[1],xmax=xlim[2],ymin=ylim[1],ymax=ylim[2],stringsAsFactors = F)
+    df <- cbind(taginfo, add)
+    out <- pols_df <- SpatialPolygonsDataFrame(Sr=pols_joined, data=df, match.ID = FALSE)
+    out@plotOrder <- 1:nrow(out)
   }
   
   if(substr(file,nchar(file)-2,nchar(file)) %in% c("kml","kmz")){
@@ -100,11 +135,70 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
     LikelihoodArea <- prob_lim*100
     if(!(prob_lim %in% c(.99, .95, .5))) stop("Invalid 'porb_lim' value. Please select one of the following values: 0.99, 0.95, 0.50")
     out <- .merge_pols(pl, LikelihoodArea=LikelihoodArea, date_format=date_format, lang_format=lang_format, tz=tz, proj4string = proj4string, xlim=xlim, ylim=ylim)
-    
+    out@plotOrder <- 1:nrow(out)
   }
+  
   return(out)
 }
 
+.check_and_fill_holes <- function(x){
+  ## fill potential holes:
+  report <- .clgeo_CollectionReport(x)
+  issues <- length(which(report$valid == FALSE))
+  npols <- length(x)
+  if(issues >= 1){
+    for(i in 1:issues){
+      new_report <- .clgeo_CollectionReport(x)
+      j <- which(new_report$valid == FALSE)[1]
+      add <- try(buffer(x[j,],0),silent = TRUE)
+      proj4string(add) <- proj4string(x)
+      x0 <- rbind(x[1:(j-1),], spChFIDs(add,names(x)[j]))
+      if(j+1 <= npols) x0 <- rbind(x0, x[(j+1):npols,])
+      x <- x0
+    }
+  }
+  return(x)
+}
+
+.clgeo_CollectionReport	 <- function(spo){
+  clgeo_report <- as.data.frame(do.call("rbind", lapply(1:length(spo), 
+                                                        function(x) {
+                                                          report <- unlist(.clgeo_GeometryReport(spo[x, ]))
+                                                        })), stringsAsFactors = FALSE)
+  clgeo_report$valid <- as(clgeo_report$valid, "logical")
+  clgeo_report$type <- as.factor(clgeo_report$type)
+  clgeo_report$issue_type <- as.factor(clgeo_report$issue_type)
+  return(clgeo_report)
+}
+
+.clgeo_GeometryReport <- function(spgeom){ 
+  
+  clgeo_report <- list(type = NA, valid = FALSE, issue_type = NA, 
+                       error_msg = NA, warning_msg = NA)
+  report <- tryCatch({
+    isvalid <- rgeos::gIsValid(spgeom)
+    if (isvalid) 
+      clgeo_report$valid <- TRUE
+    return(clgeo_report)
+  }, warning = function(w) {
+    clgeo_report$type <- "rgeos_validity"
+    clgeo_report$valid <- FALSE
+    if (regexpr("at or near point", conditionMessage(w), 
+                "match.length", ignore.case = TRUE) > 1) 
+      clgeo_report$issue_type = "GEOM_VALIDITY"
+    clgeo_report$warning_msg <- conditionMessage(w)
+    return(clgeo_report)
+  }, error = function(e) {
+    clgeo_report$type <- "rgeos_error"
+    clgeo_report$valid <- FALSE
+    if (regexpr("orphaned hole", conditionMessage(e), "match.length", 
+                ignore.case = TRUE) > 1) 
+      clgeo_report$issue_type = "ORPHANED_HOLE"
+    clgeo_report$error_msg = conditionMessage(e)
+    return(clgeo_report)
+  })
+  return(report)
+}
 
 
 .getKMLpols <- function(kmlfile, ignoreAltitude=TRUE){
@@ -169,13 +263,31 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
       j <- j+1
     }
   }
-  out$file <- kmlfile
+  
+  itaginfo <- grep('<description><!',kml0)
+  info_raw <- kml0[itaginfo]
+  out$info <- data.frame(file=kmlfile,DeployID=NA, Ptt=NA, Serial=NA, speed=NA, score=NA,stringsAsFactors = F)
+  if(grepl('PTT ',info_raw)){
+    out$info$DeployID <- out$info$Ptt <- strsplit(strsplit(info_raw,"PTT ")[[1]][2],",")[[1]][1]
+  }
+  if(grepl('Serial ',info_raw)){
+    out$info$Serial <- strsplit(strsplit(info_raw,"Serial ")[[1]][2],",")[[1]][1]
+  }
+  if(grepl('@ ',info_raw)){
+    out$info$speed <- strsplit(strsplit(info_raw,"@ ")[[1]][3],",")[[1]][1]
+  }
+  if(grepl(' Model Score ',info_raw)){
+    out$info$score <- strsplit(strsplit(info_raw," Model Score ")[[1]][2],"<")[[1]][1]
+  }
+  
   return(out)
 }
 
+
+
 .merge_pols <- function(pl, LikelihoodArea=95, date_format = "%d-%b-%Y %H:%M:%S",lang_format="en",tz="UTC", proj4string, xlim, ylim){
   out <- pl
-  file <- out$file; out$file <- c()
+  file <- out$info$file; out$file <- c()
   ltype <- paste0(LikelihoodArea,"% Likelihood Areas")
   valid_ltypes <- gsub("% Likelihood Areas","",names(out))
   if(!ltype %in% names(out)) stop("Please select one of the following valid Likelihood Areas: ",paste(valid_ltypes,collapse=", "))
@@ -200,10 +312,14 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
     xlim <- range(c(xlim,coords[,1]))
     ylim <- range(c(ylim,coords[,2]))
   }
-  pols_joined <- pols
+  pols_joined <- .check_and_fill_holes(pols)
+
   datetime <- .fact2datetime(names(out[[ltype]]),date_format = date_format, lang_format = lang_format, tz = tz)
   
-  out2 <- pols_df <- SpatialPolygonsDataFrame(Sr=pols_joined, data=data.frame(file=file,prob_lim=LikelihoodArea/100,datetime=datetime,
-                                                                              xmin=xlim[1],xmax=xlim[2],ymin=ylim[1],ymax=ylim[2]),FALSE)
+  df <- out$info
+  add <- data.frame(prob_lim=LikelihoodArea/100,datetime=datetime,
+                    xmin=xlim[1],xmax=xlim[2],ymin=ylim[1],ymax=ylim[2],stringsAsFactors = F)
+  df <- cbind(df,add)
+  out2 <- pols_df <- SpatialPolygonsDataFrame(Sr=pols_joined, data=df,FALSE)
   return(out2)
 }

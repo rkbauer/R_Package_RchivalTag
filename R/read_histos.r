@@ -115,25 +115,25 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
           tstart <- as.numeric(c(out$datetime))
           tend <- as.numeric(c(out$datetime))+out$tstep
           
-          out$nperc_24h <-  round(100*(tend-tstart)/(60*60)/24,1)
-          out$nperc_24h
-          # out$nperc_24h[1] <- 100*(24-.datetime2hour.dc(out$datetime[1]))/24
+          out$nperc_dat <-  round(100*(tend-tstart)/(60*60)/24,1)
+          out$nperc_dat
+          # out$nperc_dat[1] <- 100*(24-.datetime2hour.dc(out$datetime[1]))/24
           out$duration <- tstep <- tstep/(60*60)
           out$tstep <- out$tstep/(60*60)
           out$nrec <- round(tend-tstart,1)/(60*60)
           
-          if(out$nperc_24h[1] < 0){
+          if(out$nperc_dat[1] < 0){
             hc <- .datetime2hour.dc(out$datetime)
             ik <- which(hc[2:(length(hc)-1)] == hc[1])
             if(length(hc[2:(length(hc)-1) == hc[1]])){
-              out$nperc_24h[1] <- out$nperc_24h[ik[1]+1]
+              out$nperc_dat[1] <- out$nperc_dat[ik[1]+1]
               out$nrec[1] <- out$nrec[ik[1]+1]
             }
           }
         }else{
           tstart <- as.numeric(c(out$datetime))
           tend <- as.numeric(.date2datetime(out$date[1]+1, midday = F, tz = "UTC"))
-          out$nperc_24h <- round(100*(tend-tstart)/(60*60)/24,1)
+          out$nperc_dat <- round(100*(tend-tstart)/(60*60)/24,1)
           tstep <- (tend-tstart)/(60*60)[1]
         }
         
@@ -147,7 +147,7 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
               # save(out,i, file="~/Desktop/file.rd")
               # load("~/Desktop/file.rd",verbose = T)
               # stop()
-              x <- out[rep(i,out$nperc_24h[i]*100),grep("Bin",names(out))]
+              x <- out[rep(i,out$nperc_dat[i]*100),grep("Bin",names(out))]
               add <- out[i[1],]
               add[,grep("Bin",names(out))] <- apply(x,2,FUN = mean)
               add[which(is.na(add),arr.ind = T)] <- 0
@@ -157,7 +157,7 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
               stats <- .get_histos_stats(add[,grep("Bin",names(out))], bb, omit_negatives)
               # hist_list[[Type]][[id]]$bin_breaks <- stats$bin_breaks
               add <- cbind(info,stats$df)
-              add$nperc_24h <- sum(out$nperc_24h[i])
+              add$nperc_dat <- sum(out$nperc_dat[i])
               add$nrec <- sum(out$nrec[i])
               add$duration <- sum(out$duration[i])
               
@@ -185,11 +185,11 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
             warning("Returning raw data")
           }else{
             
-            h <- plyr::ddply(df[,c("DeployID","Ptt","nperc_24h")],c("DeployID","Ptt"),function(x){
-              ii <- x$nperc_24h < min_perc
+            h <- plyr::ddply(df[,c("DeployID","Ptt","nperc_dat")],c("DeployID","Ptt"),function(x){
+              ii <- x$nperc_dat < min_perc
               c(kept=nrow(x[!ii,]),omitted=nrow(x[ii,]))})
             warning(message(paste0("Omitted the following number of ",Type," entries based on min_perc=",min_perc," argument!\n",paste0(capture.output(h), collapse = "\n"))))
-            df <- df[which(df$nperc_24h >= min_perc),]
+            df <- df[which(df$nperc_dat >= min_perc),]
             hist_list[[Type]][[id]]$df <- df
           }
         }
@@ -202,10 +202,10 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
       }
     }
   }
-  h <- plyr::ddply(df_combined[,c("DeployID","Ptt","nperc_24h","Type")],c("DeployID","Ptt","Type"),function(x){n=nrow(x); c(p0_25=round(100*nrow(x[which(x$nperc_24h <= 25),])/n,1),
-                                                                                                                            p0_50=round(100*nrow(x[which(x$nperc_24h <= 50),])/n,1),
-                                                                                                                            p0_75=round(100*nrow(x[which(x$nperc_24h <= 75),])/n,1),
-                                                                                                                            p0_90=round(100*nrow(x[which(x$nperc_24h <= 90),])/n,1))})
+  h <- plyr::ddply(df_combined[,c("DeployID","Ptt","nperc_dat","Type")],c("DeployID","Ptt","Type"),function(x){n=nrow(x); c(p0_25=round(100*nrow(x[which(x$nperc_dat <= 25),])/n,1),
+                                                                                                                            p0_50=round(100*nrow(x[which(x$nperc_dat <= 50),])/n,1),
+                                                                                                                            p0_75=round(100*nrow(x[which(x$nperc_dat <= 75),])/n,1),
+                                                                                                                            p0_90=round(100*nrow(x[which(x$nperc_dat <= 90),])/n,1))})
   if(any(h$p0_90 > 50) & missing(min_perc)) stop(paste("High percentage of missing data in at least one individual. please revise (e.g. filter with 'min_perc' argument)!\n", 
                                                        message(paste0(capture.output(h), collapse = "\n"))))
   return(hist_list)

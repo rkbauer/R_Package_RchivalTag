@@ -1,7 +1,7 @@
 
 
-plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim, pal="jet", 
-                             cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
+plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim, show.colorbar=TRUE, 
+                             pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
   z0 <- z
   y0 <- y
   if(missing(mars)) mars <- c(5,4,4,10)
@@ -60,7 +60,8 @@ plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim
   # par(new=T)
   # oceanmap::empty.plot()
   # oceanmap::set.colorbar(cbpos = "r",pal = pal,zlim = zlim, cb.xlab = cb.xlab,cb.xlab.line=cb.xlab.line)
-  oceanmap::set.colorbarp(cbxp = c(90,91),cbyp = c(20,84),total.reg = F,pal = pal,zlim = zlim, cb.xlab=cb.xlab,cb.xlab.line=cb.xlab.line)
+  if(show.colorbar) oceanmap::set.colorbarp(cbxp = c(90,91),cbyp = c(20,84),total.reg = F,pal = pal,
+                                            zlim = zlim, cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line)
   
   if(Return) return(a)
 }
@@ -70,8 +71,8 @@ plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim
 
 
 
-plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature", xlim, ylim, zlim, pal="jet", 
-                                           cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
+plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature", xlim, ylim, zlim, show.colorbar=TRUE, 
+                                           pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
   
   if(!do_interp) {
     ts_df <- resample_PDT(ts_df, PDT)
@@ -128,13 +129,13 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
         # u <- readline()
         # if(u == "s") stop()
         # lines(as.numeric(out$x),out$y,col=out$col)
-        head(out)
       }
     }
     # par(new=T)
     # oceanmap::empty.plot()
     # oceanmap::set.colorbar(cbpos = "r",pal = pal,zlim = zlim, cb.xlab = cb.xlab,cb.xlab.line=cb.xlab.line)
-    oceanmap::set.colorbarp(cbxp = c(90,91),cbyp = c(20,84),total.reg = F,pal = pal,zlim = zlim, cb.xlab=cb.xlab,cb.xlab.line=cb.xlab.line)
+    if(show.colorbar) oceanmap::set.colorbarp(cbxp = c(90,91),cbyp = c(20,84),total.reg = F,pal = pal,
+                                              zlim = zlim, cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line)
     
   }
   if(Return) return(a)
@@ -142,8 +143,8 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
 
 
 
-plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_res=10, xlim, ylim, zlim, pal="jet", 
-                                           cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
+plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_res=10, xlim, ylim, zlim, show.colorbar=TRUE, 
+                                       pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
   
   if(!do_interp) {
     ts_df <- resample_DepthTempTS(ts_df)
@@ -208,7 +209,8 @@ plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_re
     # par(new=T)
     # oceanmap::empty.plot()
     # oceanmap::set.colorbar(cbpos = "r",pal = pal,zlim = zlim, cb.xlab = cb.xlab,cb.xlab.line=cb.xlab.line)
-    oceanmap::set.colorbarp(cbxp = c(93,94),cbyp = c(20,84),total.reg = F,pal = pal,zlim = zlim, cb.xlab=cb.xlab,cb.xlab.line=cb.xlab.line)
+    if(show.colorbar) oceanmap::set.colorbarp(cbxp = c(93,94),cbyp = c(20,84),total.reg = F,pal = pal,
+                                              zlim = zlim, cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line)
     
   }
   if(Return) return(a)

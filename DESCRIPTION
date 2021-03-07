@@ -1,16 +1,16 @@
 Package: RchivalTag
 Type: Package
-Title: Analyzing Archival Tagging Data
+Title: Analyzing and Interactive Visualization of Archival Tagging Data
 Version: 0.1.4
-Date: 2020-08-27
+Date: 2021-02-14 
 Author: Robert Bauer
 Maintainer: Robert Bauer <marine.biologging@gmail.com>
 Description: A set of functions to generate, access and analyze standard data products from archival tagging data.
 Depends: R (>= 3.5.0), maps, mapdata
-Imports: plyr, maptools, graphics, stats, raster, readr, rgeos, ncdf4, pracma, dygraphs, xts, lubridate, grDevices, oceanmap, sp, methods, PBSmapping, ggplot2
+Imports: plyr, maptools, graphics, stats, raster, readr, rgeos, ncdf4, pracma, dygraphs, xts, lubridate, shiny, htmlwidgets, grDevices, oceanmap, sp, methods, PBSmapping, ggplot2, ggedit, plotly, leaflet, leaflet.extras2, sf
 License: GPL (>= 3)
 LazyLoad: yes
-Packaged: 2020-08-27 17:13:17 UTC; work
+Packaged: 2021-02-14 17:13:17 UTC; work
 Repository: CRAN
-Date/Publication: 2020-08-27 19:56:16
+Date/Publication: 2021-02-14 19:56:16
 NeedsCompilation: no

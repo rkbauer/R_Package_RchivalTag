@@ -46,7 +46,7 @@ abacus_plot(x, type, type2, meta,
 }
 
 \item{type, type2}{
-the data type of x ("ts", "lightlocs","tad","tat") and the name of the variable to be plotted: "perc" in case of lightlocation and time series data, "perc_24h" in case of histogram data ("tad", "tat").
+the data type of x ("ts", "lightlocs","tad","tat") and the name of the variable to be plotted: "perc" in case of lightlocation and time series data, "perc_dat" in case of histogram data ("tad", "tat").
 }
 
 \item{meta}{
