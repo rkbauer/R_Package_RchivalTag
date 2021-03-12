@@ -19,7 +19,7 @@ ggplot_geopos(x, ggobj, xlim, ylim, zlim, standard_year=FALSE,
               main ,lwd=1, size=2, shape=19, ...)
             
 get_geopos(x, xlim, ylim, date_format, lang_format="en", tz="UTC", 
-           proj4string, prob_lim=.5)
+           proj4string, prob_lim=.5,verbose=TRUE)
 }
 
 \arguments{
@@ -104,6 +104,10 @@ additional arguments to be passed to \link{ggplotmap}.
 
 \item{main}{
 an overall title for the plot
+}
+
+\item{verbose}{
+whether the file names should be printed during loading (By default \code{TRUE}).
 }
 
 }

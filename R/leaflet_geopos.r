@@ -1,5 +1,5 @@
 leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLayers=TRUE,
-                           radius=1000, pal, cb.title="Date",cbpos="bottomright",
+                           radius=1000, pal, layer_title=key, cb.title="Date",cbpos="bottomright",
                            showScaleBar=TRUE, showSlideBar=FALSE){
   
   keys <- c("DeployID","Serial","datetime","speed","prob_lim")
@@ -89,7 +89,7 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
             $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">key</label>');
         }
     "
-    ltitle <- gsub("key",key,ltitle)
+    ltitle <- gsub("key",layer_title,ltitle)
     m <- m %>%
       onRender(ltitle)
   }

@@ -190,15 +190,16 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
       Breaks <- .as.Date_origin(zlim[1]:zlim[2])
       Breaks <- as.numeric(Breaks[which(format(Breaks,"%d") %in% c("01","15"))])
     }
+    limits <- range(pretty(zlim)-1,pretty(zlim))
     # if(!all(range(cmb$datenm) %in% Breaks)) Breaks <- c(median(unique(cmb$datenm)),range(cmb$datenm))
     if(standard_year & all_year){
       Breaks <-.as.Date_origin(zlim[1]:zlim[2])
       Breaks <- Breaks[which(substr(Breaks,nchar(Breaks)-1,nchar(Breaks)) == "15")]
       Breaks <- as.numeric(Breaks)
+      limits <- range(zlim)
     }
     # if(length(cmb$datenm) == 1) Breaks <- cmb$datenm
     Breaks <- Breaks[order(Breaks)]
-    
     # 
     Labels <- as.character(.formatDate2cb.date_format(.as.Date_origin(Breaks), cb.date_format=cb.date_format))
     if(length(unique(as.character(Labels))) != length(Labels)) {
@@ -208,12 +209,12 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
                                       colours=Raster.cols, 
                                       labels=Labels, 
                                       breaks=Breaks, 
-                                      limits=range(pretty(zlim)-1,pretty(zlim))))
+                                      limits=limits))
     if(fill_scale) out <- out + suppressWarnings(scale_fill_gradientn(name = cb.title, 
                                                      colours=Raster.cols, 
                                                      labels=Labels, 
                                                      breaks=Breaks, 
-                                                     limits=range(pretty(zlim)-1,pretty(zlim))))
+                                                     limits=limits))
     
      out <- out + theme(legend.position = cbpos) + guides(color=guide_colourbar(barheight = cb.height))
   }else{

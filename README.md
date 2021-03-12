@@ -1,11 +1,10 @@
 
-
 <p align="center">
   <img src="./img/RchivalTag_logo.svg" alt="Size Limit CLI" width="300">
 </p>
 
 
-<h4 align="center">An R-Package for Analyzing and Interactive Visualization of Archival Tagging Data.</h4>
+<h4 align="center">An R-Package for Analyzing and Interactive Visualization of Archival Tagging Data</h4>
 
 <p align="center">
   <a href="#author">Author</a> •
@@ -83,3 +82,7 @@ This package was developed during my PhD thesis at the [IFREMER](\link{https://w
 >  [Google Scholar](https://scholar.google.com/citations?hl=en&user=J-0_tdbR2tgC) &nbsp;&middot;&nbsp;
 >  [ResearchGate](https://www.researchgate.net/profile/Robert-Bauer-13) &nbsp;&middot;&nbsp;
 
+
+## License
+
+GPL (>= 3)

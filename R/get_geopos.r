@@ -1,9 +1,9 @@
-get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", proj4string, prob_lim=.5){
+get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", proj4string, prob_lim=.5, verbose=TRUE){
   file <- x
   if(!file.exists(x)) stop(paste("The file", file, "does not exist in the current working directory. Please revise!"))
   if(missing(date_format)) date_format <- "%d-%b-%Y %H:%M:%S"
   if (missing(proj4string)) proj4string <- sp::CRS(as.character(NA))
-  cat(paste0("Loading tagging tracks from file: ",file,"\n"))
+  if(verbose) cat(paste0("Loading tagging tracks from file: ",file,"\n"))
   if(substr(file,nchar(file)-2,nchar(file)) == "csv"){
     #### check for header line:
     skip <- -1
@@ -74,7 +74,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
     i <- j <- 1
     pols <- c()
     for(i in 1:length(datetime)){
-      print(datetime[i])
+      if(verbose) print(datetime[i])
       Raster.LR0 <- raster::raster(file,varname = "twelve_hour_likelihoods",band = i)
       Raster.LR <- raster::extend(Raster.LR0, Boundaries) #then extends any of your surfaces with the set boundaries
       #You can then use stack() to stack multiple tags, and overlay() to merge them together into a single probability surface.
@@ -131,7 +131,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
   }
   
   if(substr(file,nchar(file)-2,nchar(file)) %in% c("kml","kmz")){
-    pl <- .getKMLpols(kmlfile=file)
+    pl <- .getKMLpols(kmlfile=file,verbose = verbose)
     LikelihoodArea <- prob_lim*100
     if(!(prob_lim %in% c(.99, .95, .5))) stop("Invalid 'porb_lim' value. Please select one of the following values: 0.99, 0.95, 0.50")
     out <- .merge_pols(pl, LikelihoodArea=LikelihoodArea, date_format=date_format, lang_format=lang_format, tz=tz, proj4string = proj4string, xlim=xlim, ylim=ylim)
@@ -201,7 +201,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
 }
 
 
-.getKMLpols <- function(kmlfile, ignoreAltitude=TRUE){
+.getKMLpols <- function(kmlfile, ignoreAltitude=TRUE,verbose){
   if (missing(kmlfile))  stop("kmlfile is missing")
   
   
@@ -227,7 +227,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
     # system(paste("rm -r", gsub(" ","\\\\ ",exdir)))
     # system(paste("rm -r", gsub(" ","\\\\ ",zipfile)))
     # 
-    cat("extracted kml-file from provided kmz-file\n")
+    if(verbose) cat("extracted kml-file from provided kmz-file\n")
   }
   
   kml0 <- readLines(kmlfile,warn=F)
