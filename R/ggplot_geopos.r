@@ -1,9 +1,10 @@
 ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_year=standard_year, date_format, lang_format="en", tz="UTC", 
-                          cb.title, cb.date_format, cbpos, cb.height = 10, cb.xlab = "",
-                          prob_lim=.75, color_by="date", pal, alpha=70, pal.reverse=FALSE, type="p", main ,lwd=1, size=2, 
+                          Breaks, cb.title, cb.date_format, cbpos, cb.height = 10, cb.xlab = "",
+                          cb.reverse=FALSE, pal.reverse=cb.reverse, prob_lim=.75, color_by="date", pal, alpha=70, type="p", main ,lwd=1, size=2, 
                           shape=19, ...){
   fill_scale <- F
-  
+  trans <- "identity"
+  if(cb.reverse) trans <- 'reverse'
   if(missing(cbpos)) cbpos <- "r"
   cbpos_long <- c("left","right","top","bottom")
   cbpos <- cbpos_long[which(substr(cbpos_long,1,1) == cbpos)]
@@ -77,21 +78,27 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
       
       cmb <- cmb[which(!is.na(cmb$Lat) & !is.na(cmb$Lat)),]
       cmb$color_full <- as.character(cmb$color_full)
+
+      cmb <- cmb[order(cmb$DeployID,cmb$datetime),]
       
-      cmb$Latend <- cmb$Lat+1
-      cmb$Lonend <- cmb$Lon+1
-      cmb <- cmb[order(cmb$DeployID,cmb$datenm),]
+      ## add space after each track (to avoid interpolating lines between multiple tracks when standard_year=T)
+      a <- cmb[1,]; a[,] <- NA
+      cmb <- do.call(rbind, lapply(split(cmb, cmb$DeployID), function(i){
+        add <- a
+        add$DeployID <- i$DeployID[1]
+        rbind(add, i)
+      }))
+      
       d <- cmb[1,]; d[,] <- NA
       add <- rbind(cmb[2:nrow(cmb),],d)
       add <- add[,c("DeployID","Lon","Lat")]
       names(add) <- paste0(names(add),"2")
       cmb2 <- cbind(cmb,add)
       cmb2$datenm[which(cmb2$DeployID != cmb2$DeployID2)] <- NA
-      cmb2 <- cmb2[which(!is.na(cmb2$datenm)),]
+      cmb2 <- cmb2[which(!is.na(cmb2$datetime)),]
       if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=~datenm,group=~DeployID,text=~text),size=size,shape=shape))
       if(type %in% c("l","b","pl")) ggobj <- ggobj + suppressWarnings(geom_segment(cmb2,mapping=aes_(x=~Lon,y=~Lat,xend=~Lon2,yend=~Lat2,
-                                                                                    colour=~datenm,group=~DeployID,text=~text),size=lwd))
-      
+                                                                                                     colour=~datenm,group=~DeployID,text=~text),size=lwd))
     }else{
       if(missing(cb.title)) cb.title <- color_by
       
@@ -183,14 +190,17 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
   }
   if(!missing(main)) b <- b + ggtitle(main)
   if(color_by %in% c("date")){
-    Breaks <- as.numeric(pretty(zlim))
+    if(missing(Breaks)) Breaks <- pretty(zlim)
+    Breaks <- as.numeric(Breaks)
     # Breaks <- as.numeric(pretty(.as.Date_origin(cmb$datenm)))
     zlim <- as.numeric(as.Date(zlim))
-    if(all(format(.as.Date_origin(zlim),"%d") %in% c("01","15"))) {
-      Breaks <- .as.Date_origin(zlim[1]:zlim[2])
-      Breaks <- as.numeric(Breaks[which(format(Breaks,"%d") %in% c("01","15"))])
-    }
-    limits <- range(pretty(zlim)-1,pretty(zlim))
+    # if(all(format(.as.Date_origin(zlim),"%d") %in% c("01","15"))) {
+    #   Breaks <- .as.Date_origin(zlim[1]:zlim[2])
+    #   Breaks <- as.numeric(Breaks[which(format(Breaks,"%d") %in% c("01","15"))])
+    # }
+    # limits <- range(zlim)
+    limits <- range(c(Breaks,zlim))
+    
     # if(!all(range(cmb$datenm) %in% Breaks)) Breaks <- c(median(unique(cmb$datenm)),range(cmb$datenm))
     if(standard_year & all_year){
       Breaks <-.as.Date_origin(zlim[1]:zlim[2])
@@ -205,18 +215,25 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
     if(length(unique(as.character(Labels))) != length(Labels)) {
       Labels[seq(2,length(Labels),by=2)] <- ""
     }
+    if(trans == "reverse"){
+      Labels <- rev(Labels)
+      Breaks <- rev(Breaks)
+      limits <- rev(limits)
+    }
     out <- b + suppressWarnings(scale_colour_gradientn(name = cb.title, 
-                                      colours=Raster.cols, 
-                                      labels=Labels, 
-                                      breaks=Breaks, 
-                                      limits=limits))
-    if(fill_scale) out <- out + suppressWarnings(scale_fill_gradientn(name = cb.title, 
-                                                     colours=Raster.cols, 
-                                                     labels=Labels, 
-                                                     breaks=Breaks, 
-                                                     limits=limits))
+                                                       colours=Raster.cols, 
+                                                       labels=Labels,
+                                                       breaks=Breaks,
+                                                       limits=limits,
+                                                       trans=trans))
+    if(fill_scale) out <- out + suppressWarnings(scale_fill_gradientn(name = cb.title,
+                                                                      colours=Raster.cols,
+                                                                      labels=Labels,
+                                                                      breaks=Breaks,
+                                                                      limits=limits,
+                                                                      trans=trans))
     
-     out <- out + theme(legend.position = cbpos) + guides(color=guide_colourbar(barheight = cb.height))
+    out <- out + theme(legend.position = cbpos) + guides(color=guide_colourbar(barheight = cb.height))
   }else{
     out <- b + suppressWarnings(scale_colour_manual(values = df.col$color,guide = "legend",name=cb.title)) + theme(legend.position = cbpos, legend.key=element_blank()) #+ guides(color=guide_colourbar(barheight = cb.height))
   }
