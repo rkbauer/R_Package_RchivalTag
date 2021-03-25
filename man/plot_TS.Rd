@@ -126,7 +126,7 @@ additional arguments to be passed to \link{plot}.
 }
 }
 
-\seealso{\link{dy_DepthTS}, \link{plot_DepthTempTS}} 
+\seealso{\link{ggboxplot_DepthTS_by_hour}, \link{dy_DepthTS}, \link{plot_DepthTempTS}} 
 
 
 \author{

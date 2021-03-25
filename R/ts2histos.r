@@ -102,7 +102,7 @@ ts2histos <- function(ts_df, tad_breaks=NULL, tat_breaks=NULL, split_by=NULL, ag
                                                                              perc0_75=round(100*nrow(x[which(x$nperc_dat <= 75),])/n,1),
                                                                              perc0_90=round(100*nrow(x[which(x$nperc_dat <= 90),])/n,1)
                                                                              )})
-  if(any(h$perc0_90 > 50) & missing(min_perc)) stop(paste("High percentage of missing data in at least one individual (e.g. nrecs0_25 and perc0_25 correspond to the number and percentage of days or daytime periods with less than 25% of missing data). Please revise (e.g. filter with 'min_perc' argument)!\n", 
+  if(any(h$perc0_90 > 50) & missing(min_perc)) stop(paste("High percentage of missing data in at least one individual (e.g. nrecs0_25 and perc0_25 correspond to the number and percentage of days or daytime periods with less than 25% of missing data). \nPlease revise (e.g. filter with 'min_perc' argument)!\n", 
                                    message(paste0(capture.output(h), collapse = "\n"))))
   return(output)
 }

@@ -21,7 +21,7 @@ resample_TS(df, tstep)
 \item{df}{\link{data.frame} holding the time series data to be resampled, including a 'datetime'-vector (in \code{POSIXct}-format  and UTC).
 }
 
-\item{tstep}{numeric vector indicating the resampling resolution in seconds).
+\item{tstep}{numeric vector indicating the resampling resolution (in seconds).
 }
 
 }

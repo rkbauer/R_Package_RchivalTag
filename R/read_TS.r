@@ -78,6 +78,6 @@ read_TS <- function(ts_file,header=TRUE,sep=",",skip=0,date_format,lang_format="
     it <- it+1
   }
   
-  out <- data.frame(DeployID=tmp$DeployID[1], Ptt=tmp$Ptt[1], date=as.Date(out$datetime), out)
+  out <- data.frame(DeployID=tmp$DeployID[1], Ptt=tmp$Ptt[1], date=as.Date(out$datetime), out,stringsAsFactors = F)
   return(out)
 }

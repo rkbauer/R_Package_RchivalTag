@@ -1,11 +1,11 @@
-leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLayers=TRUE,
-                           radius=1000, pal, layer_title=key, cb.title="Date",cbpos="bottomright",
+leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, collapsedLayers=TRUE,
+                           radius=1000, pal, layer_title=ID_label, cb.title="Date",cbpos="bottomright",
                            showScaleBar=TRUE, showSlideBar=FALSE){
   
-  keys <- c("DeployID","Serial","datetime","speed","prob_lim")
-  if(!(key %in% names(data))) stop(paste(key,"not in geolocation data. Please revise!"))
-  # if(missing(except)) except <- c()
-  # except <- c(except,key)
+  ID_labels <- c("DeployID","Serial","datetime","speed","prob_lim")
+  if(!(ID_label %in% names(data))) stop(paste(ID_label,"not in geolocation data. Please revise!"))
+  # if(missing(except_label)) except_label <- c()
+  # except_label <- c(except_label,ID_label)
   
   cmap <- NULL
   data(cmap, package='oceanmap', envir = environment())
@@ -19,7 +19,7 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
   
   cpal = colorNumeric(palette = pal, domain = data$datenm) 
   data$datenm <- as.numeric(as.Date(data$datetime))
-  data <- .make_labels(data,key=key,add_label=add_label, except=except)
+  data <- .make_labels(data,ID_label=ID_label,add_label=add_label, except_label=except_label)
   labs <- as.list(data$X)
   
   if(showSlideBar) {
@@ -55,11 +55,11 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
       addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
       addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
     
-    overlayGroups <- ids <- unique(data[[key]])
+    overlayGroups <- ids <- unique(data[[ID_label]])
     
     if(class(data) == "SpatialPolygonsDataFrame"){
       for(id in ids){
-        add <- data[which(data[[key]] == id),]
+        add <- data[which(data[[ID_label]] == id),]
         # add <- add[order(add$datetime),]
         add@plotOrder <- order(-as.numeric(add$datetime))
         m <- m %>% addPolygons(data = add, color = ~cpal(datenm),label = lapply(labs, shiny::HTML), group = id) 
@@ -68,7 +68,7 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
     
     if(class(data) == "data.frame"){
       for(id in ids){
-        add <- data[which(data[[key]] == id),]
+        add <- data[which(data[[ID_label]] == id),]
         add <- add[order(add$datetime),]
         m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
                               label = lapply(labs, shiny::HTML),radius =radius, group = id)
@@ -77,7 +77,7 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
     
     if(class(data) == "SpatialPointsDataFrame"){
       for(id in ids){
-        add <- data[which(data[[key]] == id),]
+        add <- data[which(data[[ID_label]] == id),]
         add <- add[order(add$datetime),]
         m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
                               label = lapply(labs, shiny::HTML),radius =radius, group = id)
@@ -86,10 +86,10 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
     
     ltitle <- "
         function() {
-            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">key</label>');
+            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">ID_label</label>');
         }
     "
-    ltitle <- gsub("key",layer_title,ltitle)
+    ltitle <- gsub("ID_label",layer_title,ltitle)
     m <- m %>%
       onRender(ltitle)
   }
@@ -122,10 +122,10 @@ leaflet_geopos <- function(data, key, add_label=NULL, except=NULL, collapsedLaye
 }
 
 
-.make_labels <- function(data,key,add_label=NULL,except=NULL){
-  ids <- unique(c(key,"DeployID","Serial","datetime","speed","prob_lim"))
+.make_labels <- function(data,ID_label,add_label=NULL,except_label=NULL){
+  ids <- unique(c(ID_label,"DeployID","Serial","datetime","speed","prob_lim"))
   if(!is.null(add_label)) ids <- c(ids,add_label)
-  if(!is.null(except)) ids <- ids[which(!(ids %in% except))]
+  if(!is.null(except_label)) ids <- ids[which(!(ids %in% except_label))]
   if("speed" %in% names(data)){
     data$speed <- gsub("kilometers","km",data$speed)
     data$speed <- gsub("day","d",data$speed)
