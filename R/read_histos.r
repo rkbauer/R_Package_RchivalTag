@@ -238,7 +238,7 @@ combine_histos <- function(hist_list1,hist_list2){
     if(any(nn2 == nn1)){
       ii <- which(nn2 %in% nn1)
       wwarn <- paste(Type,'-data from tags with ids:\n',paste(nn2[ii],collapse=",\n"), '\nfound in hist_list2, existed already in hist_list1 and will be skipped.')
-      options(warning.length = nchar(wwarn)+10)
+      options(warning.length = max(c(nchar(wwarn)+10,100)))
       warning(wwarn)
       nn2 <- nn2[-ii]
     }
@@ -388,7 +388,7 @@ rebin_histos <- merge_histos <- function(hist_list, tad_breaks=NULL, tat_breaks=
             if(!all(common_bin_breaks %in% bb_ids[[ii]])) warn_ids <- c(warn_ids, ii)
           }
           wwarn <- paste0("user-specified ",tolower(Type),'_breaks not found for tags with ID codes:\n',paste(gsub('\\.', ' ', gsub('_',' - ',add$ID[warn_ids])),collapse="\n"),'\nThese tags were omitted!')
-          options(warning.length = nchar(wwarn)+10)
+          options(warning.length = max(c(nchar(wwarn)+10,100)))
           warning(wwarn)
           
         }else{
@@ -456,6 +456,3 @@ rebin_histos <- merge_histos <- function(hist_list, tad_breaks=NULL, tat_breaks=
   }
   return(hist_list_new)
 }
-
-
-
