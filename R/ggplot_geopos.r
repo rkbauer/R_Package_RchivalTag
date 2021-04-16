@@ -79,26 +79,36 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
       cmb <- cmb[which(!is.na(cmb$Lat) & !is.na(cmb$Lat)),]
       cmb$color_full <- as.character(cmb$color_full)
 
-      cmb <- cmb[order(cmb$DeployID,cmb$datetime),]
+      ## find best ID label:
+      ID_Labels <- as.data.frame(cmb[1,c("DeployID","Serial","Ptt")])
+      ID_Labels <- names(ID_Labels[,which(apply(ID_Labels,2,function(x)!is.na(x)))])
+      smLabels <- as.vector(apply(cmb[,c(ID_Labels)], 2, function(x) length(unique(x))))
+      ID_Label <- ID_Labels[which(smLabels == max(smLabels))][1]
+        
+      # for(co in ID_Labels) cmb[[co]] <- paste0(co,": ",cmb[[co]],"\n")
+      
+      # cmb$ID_label <- apply( cmb[ , ID_Labels ] , 1 , paste , collapse = "" )
+      
+      cmb <- cmb[order(cmb[[ID_Label]],cmb$datetime),]
       
       ## add space after each track (to avoid interpolating lines between multiple tracks when standard_year=T)
       a <- cmb[1,]; a[,] <- NA
-      cmb <- do.call(rbind, lapply(split(cmb, cmb$DeployID), function(i){
+      cmb <- do.call(rbind, lapply(split(cmb, cmb[[ID_Label]]), function(i){
         add <- a
-        add$DeployID <- i$DeployID[1]
+        add[[ID_Label]] <- i[[ID_Label]][1]
         rbind(add, i)
       }))
-      
+
       d <- cmb[1,]; d[,] <- NA
       add <- rbind(cmb[2:nrow(cmb),],d)
-      add <- add[,c("DeployID","Lon","Lat")]
+      add <- add[,c(ID_Label,"Lon","Lat")]
       names(add) <- paste0(names(add),"2")
       cmb2 <- cbind(cmb,add)
-      cmb2$datenm[which(cmb2$DeployID != cmb2$DeployID2)] <- NA
+      cmb2$datenm[which(cmb2[[ID_Label]] != cmb2[[ID_Label]])] <- NA
       cmb2 <- cmb2[which(!is.na(cmb2$datetime)),]
-      if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=~datenm,group=~DeployID,text=~text),size=size,shape=shape))
+      if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=~datenm,group=as.name(ID_Label),text=~text),size=size,shape=shape))
       if(type %in% c("l","b","pl")) ggobj <- ggobj + suppressWarnings(geom_segment(cmb2,mapping=aes_(x=~Lon,y=~Lat,xend=~Lon2,yend=~Lat2,
-                                                                                                     colour=~datenm,group=~DeployID,text=~text),size=lwd))
+                                                                                                     colour=~datenm,group=as.name(ID_Label),text=~text),size=lwd))
     }else{
       if(missing(cb.title)) cb.title <- color_by
       
