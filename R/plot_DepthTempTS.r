@@ -1,12 +1,12 @@
 
 
 plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim, show.colorbar=TRUE, 
-                             pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
+                             pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, tz="UTC",...){
   z0 <- z
   y0 <- y
   if(missing(mars)) mars <- c(5,4,4,10)
   par(mar=mars)
-  a <- plot_DepthTS(ts_df, xlim = xlim, ylim = ylim, Return = TRUE, ...)
+  a <- plot_DepthTS(ts_df, xlim = xlim, ylim = ylim, Return = TRUE, tz=tz,...)
   cmap <- NULL
   # usethis::use_data("cmap", package='oceanmap', overwrite = TRUE)
   data("cmap", package='oceanmap', envir = environment())
@@ -25,14 +25,14 @@ plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim
     out <- merge(a,add,by.x=z0,by.y="z",all.x=TRUE)
     points(out$datetime,out[[y0]],col=out$col,pch=19,cex=pt.lwd)
   }else{
-    tstep <- min(diff(as.numeric(ts_df$datetime)))
+    tstep <- abs(pracma::Mode(as.numeric(a$datetime))) 
     if(tstep > 100) warning("Consider running plot_DepthTempTS_resampled or plot_DepthTempTS_resampled_PDT, which is more accurate for low resolution and transmitted time series data!")
     if(missing(pt.lwd)) pt.lwd <- .1
     x <- a$datetime
     y <- a[[y0]]
     z <- a[[z0]]
     input <- data.frame(x=x,y=y,z=z)
-    ii <- which(!is.na(input$z))
+    ii <- which(!is.na(input$y) & !is.na(input$z))
     for(j in 2:length(ii)){
       if(ii[j-1] == ii[j]-1){
         # j <- 2
@@ -53,7 +53,6 @@ plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim
         # u <- readline()
         # if(u == "s") stop()
         # lines(as.numeric(out$x),out$y,col=out$col)
-        head(out)
       }
     }
   }
@@ -72,13 +71,13 @@ plot_DepthTempTS <- function(ts_df, y="Depth", z="Temperature", xlim, ylim, zlim
 
 
 plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature", xlim, ylim, zlim, show.colorbar=TRUE, 
-                                           pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
+                                           pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, tz="UTC",...){
   
   if(!do_interp) {
     ts_df <- resample_PDT(ts_df, PDT)
     if(missing(pt.lwd)) pt.lwd <- .7
     a <- plot_DepthTempTS(ts_df,do_interp=F,y=y, z=z, xlim=xlim, ylim=ylim, zlim=zlim, pal=pal, 
-                     cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line, pt.lwd=pt.lwd, Return=Return,...)
+                          cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line, pt.lwd=pt.lwd, Return=Return,tz=tz,...)
   }else{
     m <- interpolate_PDTs(PDT)
     M <- m$station.1$Temperature_matrix
@@ -87,7 +86,7 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
     y0 <- y
     if(missing(mars)) mars <- c(5,4,4,10)
     par(mar=mars)
-    a <- plot_DepthTS(ts_df, xlim = xlim, ylim = ylim, Return = TRUE, ...)
+    a <- plot_DepthTS(ts_df, xlim = xlim, ylim = ylim, Return = TRUE, tz=tz,...)
     cmap <- NULL
     # usethis::use_data("cmap", package='oceanmap', overwrite = TRUE)
     data("cmap", package='oceanmap', envir = environment())
@@ -144,13 +143,13 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
 
 
 plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_res=10, xlim, ylim, zlim, show.colorbar=TRUE, 
-                                       pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, ...){
+                                       pal="jet", cb.xlab, cb.xlab.line=0, pt.lwd, do_interp=TRUE, Return=FALSE, mars, tz="UTC",...){
   
   if(!do_interp) {
     ts_df <- resample_DepthTempTS(ts_df)
     if(missing(pt.lwd)) pt.lwd <- .7
     a <- plot_DepthTempTS(ts_df,do_interp=F,y=y, z=z, xlim=xlim, ylim=ylim, zlim=zlim, pal=pal, 
-                          cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line, pt.lwd=pt.lwd, Return=Return,...)
+                          cb.xlab=cb.xlab, cb.xlab.line=cb.xlab.line, pt.lwd=pt.lwd, Return=Return,tz=tz,...)
   }else{
     DepthTempTS_binned <- bin_TempTS(ts_df,res=bin_res)
     m <- interpolate_PDTs(DepthTempTS_binned,show_info = F)
@@ -160,7 +159,7 @@ plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_re
     y0 <- y
     if(missing(mars)) mars <- c(5,4,4,10)
     par(mar=mars)
-    a <- plot_DepthTS(ts_df, xlim = xlim, ylim = ylim, Return = TRUE, ...)
+    a <- plot_DepthTS(ts_df, xlim = xlim, ylim = ylim, Return = TRUE, tz=tz,...)
     cmap <- NULL
     # usethis::use_data("cmap", package='oceanmap', overwrite = TRUE)
     data("cmap", package='oceanmap', envir = environment())

@@ -14,19 +14,19 @@ plot time series data (e.g. depth or temperature time series data from archival 
 
 \usage{
 dy_TS(ts_df, y="Depth", xlim, ylim, 
-           ylab=y, xlab="Time (UTC)", main,
+           ylab=y, xlab, main,
            ID, ID_label="Serial", 
            plot_DayTimePeriods=TRUE, twilight.set="ast", 
            color="darkblue",
-           doRangeSelector=TRUE, drawPoints=FALSE, pointSize=2, ...)
+           doRangeSelector=TRUE, drawPoints=FALSE, pointSize=2, tz="UTC",...)
 
 
 dy_DepthTS(ts_df, y="Depth", xlim, ylim, 
-           ylab=y, xlab="Time (UTC)", main,
+           ylab=y, xlab, main,
            ID, ID_label="Serial", 
            plot_DayTimePeriods=TRUE, twilight.set="ast", 
            color="darkblue",
-           doRangeSelector=TRUE, drawPoints=FALSE, pointSize=2, ...)
+           doRangeSelector=TRUE, drawPoints=FALSE, pointSize=2, tz="UTC", ...)
 }
  
 
@@ -74,6 +74,10 @@ whether to add dygraph interactive range selection and zooming bar below the fig
 
 \item{drawPoints, pointSize}{
 Whether to indicate add points to the figure at the sampling time steps as well their size.
+}
+
+\item{tz}{
+The time zone in which the data should be illustrated (By default "UTC"). ATTENTION: The required date format of the input data is "UTC" (across all RchivalTag-functions).
 }
 
 

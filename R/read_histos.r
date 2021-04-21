@@ -97,18 +97,16 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
         out$duration <- out$nrec <- NA
         
         if(nrow(out)>1){
-          # save(out, file="~/Desktop/file.rd")
-          # load("~/Desktop/file.rd",verbose = T)
-          # stop()
+
           hc <- .diff.time(out$datetime,units = "hours")
-          hc <- hc[which(hc %in% c(6,12,24))]
+          hc <- hc[which(hc %in% c(4,6,12,24))]
           # hc <- .datetime2hour.dc(out$datetime)
           # print(hc)
           # 
           # hc <- hc[which(abs(diff(hc)) %in% c(6,12,24))]
           # 
           out$tstep <- tstep <- abs(pracma::Mode(hc))*60*60 # from the pracma-package
-          
+
           tstep2 <- diff(as.numeric(c(out$datetime)))
           kk <- which(tstep2 < out$tstep[1])
           if(length(kk) > 0) out$tstep[kk] <- tstep2[kk]
@@ -144,9 +142,7 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
             
             for(d in as.character(unique(out$date))){
               i <- which(out$date == d)
-              # save(out,i, file="~/Desktop/file.rd")
-              # load("~/Desktop/file.rd",verbose = T)
-              # stop()
+
               x <- out[rep(i,out$nperc_dat[i]*100),grep("Bin",names(out))]
               add <- out[i[1],]
               add[,grep("Bin",names(out))] <- apply(x,2,FUN = mean)
@@ -158,14 +154,14 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
               # hist_list[[Type]][[id]]$bin_breaks <- stats$bin_breaks
               add <- cbind(info,stats$df)
               add$nperc_dat <- sum(out$nperc_dat[i])
+              if(any(add$nperc_dat) > 120) stop("Error in combining data. Reaching > 100%")
+              if(any(add$nperc_dat) > 100) add$nperc_dat[which(add$nperc_dat > 100)] <- 100
               add$nrec <- sum(out$nrec[i])
               add$duration <- sum(out$duration[i])
+              add$tstep <- 24
               
               out2 <- rbind(out2,add)
             }
-            # save(out,out2,file="~/Desktop/file.rd")
-            # load("~/Desktop/file.rd",verbose = T)
-            # stop()
             out <- out2
           }
         }
@@ -193,9 +189,6 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
             hist_list[[Type]][[id]]$df <- df
           }
         }
-        # save(df_combined,df,Type,file="~/Desktop/file.rd")
-        # load("~/Desktop/file.rd",verbose = T)
-        # stop()
         
         df$Type <- Type
         df_combined <- rbind(df_combined,df[,!grepl("Bin",names(df))])
@@ -456,3 +449,77 @@ rebin_histos <- merge_histos <- function(hist_list, tad_breaks=NULL, tat_breaks=
   }
   return(hist_list_new)
 }
+
+
+.get_histos_stats <- function(df, bin_breaks, correct_negative_values){
+  
+  df_old <- df
+  bin_breaks_old <- bb <- bin_breaks
+  
+  ii <- which(bb <= 0)
+  if(length(ii) > 1){
+    df[,ii[1]] <- rowSums(df[,ii])
+    df <- df[,-ii[2:length(ii)]]
+    names(df) <- paste0("Bin",1:ncol(df))
+    bin_breaks <- c(0,bb[-ii])
+  }
+  if(length(ii) == 1){
+    bin_breaks[1] <- 0
+  }
+  
+  df[,length(bin_breaks)] <- NA
+  nbins <- length(bin_breaks)-1
+  vbins <- paste0("Bin",1:nbins)
+  mids <- bin_breaks[1:nbins]+diff(bin_breaks)/2
+  
+  df$SD <- df$avg <- NA
+  for(i in 1:nrow(df)){
+    s <- c()
+    for(j in 1:length(vbins)){
+      t <- df[[vbins[j]]][i]*86 # theoreticaly 8640 depth records per day if sampled every 10s
+      s <- c(s,rep(mids[j],t))
+    }
+    df$avg[i] <- mean(s,na.rm=T)
+    df$SD[i] <- sd(s,na.rm=T)
+  }
+  
+  out <- list(df=df,bin_breaks=bin_breaks)
+  if(!correct_negative_values){
+    if(all(df_old[,ncol(df_old)] == 0)) df_old[,ncol(df_old)] <- NA
+    df_old$avg <- df$avg
+    df_old$SD <- df$SD
+    out <- list(df=df_old,bin_breaks=bin_breaks_old)
+  }
+  return(out)
+}
+
+
+# .get_histos_stats <- function(df, bin_breaks, keep_WC_format){
+#   df_old <- df
+#   bin_breaks <- bin_breaks[2:(length(bin_breaks))]
+#   df[,1] <- df[,2]+df[,1]
+#   df[,2:(length(bin_breaks)-1)] <- df[,3:length(bin_breaks)]
+#   df[,length(bin_breaks)] <- NA
+#   nbins <- length(bin_breaks)-1
+#   vbins <- paste0("Bin",1:nbins)
+#   mids <- bin_breaks[1:nbins]+diff(bin_breaks)/2
+#   
+#   df$SD <- df$avg <- NA
+#   for(i in 1:nrow(df)){
+#     s <- c()
+#     for(j in 1:length(vbins)){
+#       t <- df[[vbins[j]]][i]*86 # theoreticaly 8640 depth records per day if sampled every 10s
+#       s <- c(s,rep(mids[j],t))
+#     }
+#     df$avg[i] <- mean(s,na.rm=T)
+#     df$SD[i] <- sd(s,na.rm=T)
+#   }
+#   
+#   df_new <- df
+#   if(keep_WC_format){
+#     df_old$avg <- df$avg
+#     df_old$SD <- df$SD
+#     df_new <- df_old
+#   }
+#   return(df_new)
+# }

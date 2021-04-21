@@ -9,12 +9,12 @@ This function creates a boxplot via the ggplot library from hourly aggregated De
 }
 \usage{
 ggboxplot_DepthTS_by_hour(ts_df, ylim, min_perc=75,
-                          main="", submain, 
+                          main="", submain, xlab,
                           ID, ID_label="Serial",
                           plot_DayTimePeriods=TRUE, twilight.set="ast",
                           box=TRUE, jitter=FALSE, 
                           color_by=ID_label, cb.title=color_by,
-                          pal, opacity=0.1)
+                          pal, opacity=0.1,tz="UTC")
 }
 \arguments{
   \item{ts_df}{
@@ -27,8 +27,8 @@ limits of the y-axis.
   \item{min_perc}{
 the minimum data coverage (in percent) of daily DepthTS recoords (by default 75\%).
 }
-  \item{main, submain}{
-The title and subtitle of the figure.
+  \item{main, submain, xlab}{
+The title and subtitle of the figure as well as the label of the x-axis.
 }
 
   \item{ID, ID_label}{
@@ -48,6 +48,9 @@ If selected, records will be colored via the different groups in the column spec
 
 }
 
+\item{tz}{
+The time zone in which the data should be illustrated (By default "UTC"). ATTENTION: The required date format of the input data is "UTC" (across all RchivalTag-functions).
+}
 }
 
 \seealso{\link{hist_tad}, \link{plot_DepthTS}, \link{dy_DepthTS}} 

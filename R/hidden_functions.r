@@ -42,10 +42,13 @@
   }
   if(tz != "UTC"){
     x <- out
-    out <- as.POSIXct(strptime(as.character(x),"%Y-%m-%d %H:%M:%S",tz=tz))
+    out <- as.POSIXct(strptime(as.character(x),"%Y-%m-%d %H:%M:%S",tz=tz),tz = tz)
     i <- which(is.na(out))
-    out[i] <- as.POSIXct(strptime(paste(x[i],"00:00:00"),"%Y-%m-%d %H:%M:%S",tz=tz))
+    out[i] <- as.POSIXct(strptime(paste(x[i],"00:00:00"),"%Y-%m-%d %H:%M:%S",tz=tz),tz = tz)
   }
+  # if(tz != "UTC"){
+  #   out <- lubridate::with_tz(out,tzone=tz)
+  # }
   i <- is.na(out)
   if(any(i)) {
     # print(head(x0[i]))
@@ -60,20 +63,20 @@
   return(out)
 }
 
-.datetime2min.dc <- function(x){
-  as.numeric(format(x,"%M"))+as.numeric(format(x,"%S"))/60
+.datetime2min.dc <- function(x,tz = "UTC"){
+  as.numeric(format(x,"%M",tz = tz))+as.numeric(format(x,"%S",tz = tz))/60
 }
 
-.datetime2hour <- function(x){
-  as.numeric(format(x,"%H"))
+.datetime2hour <- function(x,tz="UTC"){
+  as.numeric(format(x,"%H",tz = tz))
 }
 
-.datetime2hour.dc <- function(x){
-  as.numeric(format(x,"%H"))+as.numeric(format(x,"%M"))/60+as.numeric(format(x,"%S"))/(60*60)
+.datetime2hour.dc <- function(x,tz="UTC"){
+  as.numeric(format(x,"%H",tz = tz))+as.numeric(format(x,"%M",tz = tz))/60+as.numeric(format(x,"%S",tz = tz))/(60*60)
 }
 
-.datetime2min <- function(x){
-  as.numeric(format(x,"%M"))
+.datetime2min <- function(x,tz="UTC"){
+  as.numeric(format(x,"%M",tz = tz))
 }
 
 .num2datetime <- function(x,tz="UTC",hours.offset=0){
@@ -81,8 +84,8 @@
   return(out)
 }
 
-.num2date <- function(x){
-  as.Date(x,origin="1970-01-01")
+.num2date <- function(x,tz = "UTC"){
+  as.Date(x,origin="1970-01-01",tz = tz)
 }
 
 
@@ -95,7 +98,7 @@
   return(Dat)
 }
 
-.date2year <- function(x) as.numeric(format(x,"%Y"))
+.date2year <- function(x,tz = "UTC") as.numeric(format(x,"%Y",tz = tz))
 
 .date2datetime <- function(x,tz="",midday=T){
   
@@ -141,76 +144,3 @@
 # }
 
 
-
-.get_histos_stats <- function(df, bin_breaks, correct_negative_values){
-  
-  df_old <- df
-  bin_breaks_old <- bb <- bin_breaks
-  
-  ii <- which(bb <= 0)
-  if(length(ii) > 1){
-    df[,ii[1]] <- rowSums(df[,ii])
-    df <- df[,-ii[2:length(ii)]]
-    names(df) <- paste0("Bin",1:ncol(df))
-    bin_breaks <- c(0,bb[-ii])
-  }
-  if(length(ii) == 1){
-    bin_breaks[1] <- 0
-  }
-  
-  df[,length(bin_breaks)] <- NA
-  nbins <- length(bin_breaks)-1
-  vbins <- paste0("Bin",1:nbins)
-  mids <- bin_breaks[1:nbins]+diff(bin_breaks)/2
-
-  df$SD <- df$avg <- NA
-  for(i in 1:nrow(df)){
-    s <- c()
-    for(j in 1:length(vbins)){
-      t <- df[[vbins[j]]][i]*86 # theoreticaly 8640 depth records per day if sampled every 10s
-      s <- c(s,rep(mids[j],t))
-    }
-    df$avg[i] <- mean(s,na.rm=T)
-    df$SD[i] <- sd(s,na.rm=T)
-  }
-  
-  out <- list(df=df,bin_breaks=bin_breaks)
-  if(!correct_negative_values){
-    if(all(df_old[,ncol(df_old)] == 0)) df_old[,ncol(df_old)] <- NA
-    df_old$avg <- df$avg
-    df_old$SD <- df$SD
-    out <- list(df=df_old,bin_breaks=bin_breaks_old)
-  }
-  return(out)
-}
-
-
-# .get_histos_stats <- function(df, bin_breaks, keep_WC_format){
-#   df_old <- df
-#   bin_breaks <- bin_breaks[2:(length(bin_breaks))]
-#   df[,1] <- df[,2]+df[,1]
-#   df[,2:(length(bin_breaks)-1)] <- df[,3:length(bin_breaks)]
-#   df[,length(bin_breaks)] <- NA
-#   nbins <- length(bin_breaks)-1
-#   vbins <- paste0("Bin",1:nbins)
-#   mids <- bin_breaks[1:nbins]+diff(bin_breaks)/2
-#   
-#   df$SD <- df$avg <- NA
-#   for(i in 1:nrow(df)){
-#     s <- c()
-#     for(j in 1:length(vbins)){
-#       t <- df[[vbins[j]]][i]*86 # theoreticaly 8640 depth records per day if sampled every 10s
-#       s <- c(s,rep(mids[j],t))
-#     }
-#     df$avg[i] <- mean(s,na.rm=T)
-#     df$SD[i] <- sd(s,na.rm=T)
-#   }
-#   
-#   df_new <- df
-#   if(keep_WC_format){
-#     df_old$avg <- df$avg
-#     df_old$SD <- df$SD
-#     df_new <- df_old
-#   }
-#   return(df_new)
-# }

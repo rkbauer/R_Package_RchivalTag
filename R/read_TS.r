@@ -27,7 +27,6 @@ read_TS <- function(ts_file,header=TRUE,sep=",",skip=0,date_format,lang_format="
   }
   
   # save(ts_df,date_format,lang_format,file="~/Desktop/file.rd")
-  # load("~/Desktop/file.rd",verbose = T)
   datetime <-.fact2datetime(ts_df$datetime_tmp, date_format=date_format, lang_format = lang_format,tz = tz)
   # ts_df$datetime_tmp <- c()
   datetime_nm <- ts_df$datetime_nm <- as.numeric(datetime)

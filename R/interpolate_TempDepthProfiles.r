@@ -54,10 +54,7 @@ interpolate_TempDepthProfiles <- function(ts, Temp_field="Temperature", ID_key="
         ### new code: (RchivalTag-package versions >= 0.07) :
         temp <- try(approx(x = k2$Depth, xout = depths, y = k2$Temperature),silent = T)
         if(class(temp) != "try-error") {
-          # save(depths, k2, file="~/Desktop/file.rd")
-          # load("~/Desktop/file.rd",verbose = T)
-          # stop()
-        
+
         Temperature_matrix[,sids] <- temp$y
         }
         #         dd <- paste0('Date_',format.Date(d,'%Y%m%d'))
