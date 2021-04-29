@@ -95,7 +95,6 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
     tags <- names(tads)
      for(i in 1:nrow(m)){
       # i <- 1
-      print(i)
       identifier <- identifiers[i]
       ii <- grep(identifier,tags)
       if(length(ii) > 0){
@@ -188,7 +187,7 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   title(main,cex.main=cex.main)
   usr <- par()$usr
   if(missing(cb.ticks)) cb.ticks <- pretty(zlim)
-  oceanmap::set.colorbar(cby=usr[3:4], cbx=c(usr[2]+.02*diff(usr[1:2]), usr[2]+.04*diff(usr[1:2])),
+  cb <- oceanmap::set.colorbar(cby=usr[3:4], cbx=c(usr[2]+.02*diff(usr[1:2]), usr[2]+.04*diff(usr[1:2])),
                          ticks=cb.ticks, zlim=zlim, cb.xlab = cb.xlab,pal = pal, cex.cb.ticks = cex.cb.ticks, cex.cb.xlab = cex.cb.xlab)
   
 }
