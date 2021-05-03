@@ -35,7 +35,7 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
     if(show_fullmonths){
       # date_range_std[2] <- date_range_std[2]+30
       # date_range_std <- as.character(date_range_std)
-      date_range_std[1] <- lubridate::floor_date(date_range_std[2],unit="months") ###paste0(substr(date_range_std[1],1,nchar(date_range_std[1])-2),"01")
+      date_range_std[1] <- lubridate::floor_date(date_range_std[1],unit="months") ###paste0(substr(date_range_std[1],1,nchar(date_range_std[1])-2),"01")
       date_range_std[2] <-  lubridate::ceiling_date(date_range_std[2],unit="months") ###paste0(substr(date_range_std[2],1,5),"01")
       # date_range_std <- as.Date(date_range_std)
     }
@@ -44,7 +44,6 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   
   m <- m_hist <- m_ts <- m_lightlocs <- matrix(NA,ncol=length(x_dates),nrow=length(identifiers))
   
-
   for(i in 1:nrow(m)){
     identifier <- identifiers[i]
     a <- meta[which(meta[[Identifier]] == identifier),]
@@ -55,7 +54,7 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
     sm$date <- gsub(year+1,"1",sm$date)
     sm$date <- gsub(year+2,"2",sm$date)
     
-    out <- merge(sm,data.frame(date=as.character(x_dates)),all=T)
+    out <- merge(sm,data.frame(date=as.character(x_dates)),all=T,by="date")
     m[(nrow(m)+1-i),] <- out$val
   }
   
