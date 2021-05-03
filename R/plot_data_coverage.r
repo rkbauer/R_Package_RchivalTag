@@ -43,8 +43,7 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   x_dates <- .num2date(date_range_std[1]:date_range_std[2])
   
   m <- m_hist <- m_ts <- m_lightlocs <- matrix(NA,ncol=length(x_dates),nrow=length(identifiers))
-  save(m,x_dates,Identifier,identifiers,meta,file="~/Desktop/test.rd")
-  load(file="~/Desktop/test.rd",verbose = T)
+
   for(i in 1:nrow(m)){
     identifier <- identifiers[i]
     a <- meta[which(meta[[Identifier]] == identifier),]
