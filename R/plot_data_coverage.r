@@ -43,18 +43,19 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   x_dates <- .num2date(date_range_std[1]:date_range_std[2])
   
   m <- m_hist <- m_ts <- m_lightlocs <- matrix(NA,ncol=length(x_dates),nrow=length(identifiers))
-  
+  save(m,x_dates,Identifier,identifiers,meta,file="~/Desktop/test.rd")
+  load(file="~/Desktop/test.rd",verbose = T)
   for(i in 1:nrow(m)){
     identifier <- identifiers[i]
     a <- meta[which(meta[[Identifier]] == identifier),]
     dates <- .num2date(a$dep.date:a$pop.date)
     sm <- data.frame(date=dates,val=1,stringsAsFactors = F)
     year <- .date2year(sm$date)[1]
-    sm$date <- gsub(year,"0",sm$date)
-    sm$date <- gsub(year+1,"1",sm$date)
-    sm$date <- gsub(year+2,"2",sm$date)
-    
-    out <- merge(sm,data.frame(date=as.character(x_dates)),all=T,by="date")
+    sm$date <- gsub(year,"0000",sm$date)
+    sm$date <- gsub(year+1,"0001",sm$date)
+    sm$date <- gsub(year+2,"0002",sm$date)
+    sm$date <- as.Date(sm$date)
+    out <- merge(sm,data.frame(date=x_dates),all=T,by="date")
     m[(nrow(m)+1-i),] <- out$val
   }
   
