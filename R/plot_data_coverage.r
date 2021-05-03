@@ -32,12 +32,13 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   if(missing(date_range_std)){
     ydays.lim <- c(min(lubridate::yday(meta$dep.date)), max(lubridate::yday(meta$pop.date[which(year_diff %in% max(year_diff))])))
     date_range_std <- as.Date(c('0-1-01', paste0(max(year_diff),'-1-01')))+ydays.lim-1
-    if(show_fullmonths)
+    if(show_fullmonths){
       # date_range_std[2] <- date_range_std[2]+30
       # date_range_std <- as.character(date_range_std)
       date_range_std[1] <- lubridate::floor_date(date_range_std[2],unit="months") ###paste0(substr(date_range_std[1],1,nchar(date_range_std[1])-2),"01")
       date_range_std[2] <-  lubridate::ceiling_date(date_range_std[2],unit="months") ###paste0(substr(date_range_std[2],1,5),"01")
       # date_range_std <- as.Date(date_range_std)
+    }
   }
   x_dates <- .num2date(date_range_std[1]:date_range_std[2])
   
