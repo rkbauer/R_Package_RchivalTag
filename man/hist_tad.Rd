@@ -35,7 +35,7 @@ hist_tad(df,
             do_mid.ticks=TRUE, yaxis.pos=0, 
             mars, space=0,
             plot_sd=TRUE, plot_se, plot_nrec=TRUE, plot_ntags=TRUE,
-            cex=1.2, cex.main=cex, cex.lab=cex, cex.inf=cex,cex.axis=1, 
+            cex=1.2, cex.main=cex, cex.lab=cex, cex.inf=cex.axis,cex.axis=1, 
             return.sm=FALSE, 
             subplot=FALSE, inside=FALSE,Type="TAD")
 } 

@@ -24,12 +24,12 @@ hist_tad <- function(df,
                      mars, space=0, 
                      #                      do.last.bin=FALSE, do.greater.than.sign=TRUE, 
                      plot_sd=TRUE, plot_se, plot_nrec=TRUE, plot_ntags=TRUE,
-                     cex=1.2, cex.main=cex, cex.lab=cex, cex.inf=cex, cex.axis=1, 
+                     cex=1.2, cex.main=cex, cex.lab=cex, cex.inf=cex.axis, cex.axis=1, 
                      return.sm=FALSE, 
                      subplot=FALSE, inside=FALSE,Type="TAD"){
   
   if(!inside & !subplot){
-    if(missing(mars)) mars <- c(4.1, 7.1, 6.1, 3.1)
+    if(missing(mars)) mars <- c(4.1, 7.1, 6.1, 3.5)
     if(missing(ylab.line)) ylab.line <- 3
     if(do_mid.ticks)  {
       if(mars[2] == 4.1) mars[2] <- 8
@@ -203,8 +203,8 @@ hist_tad <- function(df,
         }
         xticks <- seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1)
         ntags <- nrow(unique(tad.df[,which(names(tad.df) %in% c('NumBins','Serial','Ptt','DeployID'))]))
-        if(plot_nrec) text(xticks[par()$xaxp[3]], AT[1], paste0("n = ", nrow(tad.df), " days of data"), xpd=T, pos=1, cex=cex.inf)
-        if(plot_ntags) text(xticks[par()$xaxp[3]], AT[1]-.75-space, paste0("(", ntags, .switch_if(ntags == 1, " tag)"," tags)")), xpd=T, pos=1, cex=cex.inf)
+        if(plot_nrec) text(xticks[par()$xaxp[3]], AT[1]+.1, paste0("n = ", nrow(tad.df), " days of data"), xpd=T, pos=1, cex=cex.inf)
+        if(plot_ntags) text(xticks[par()$xaxp[3]], AT[1]-.8-space, paste0("(", ntags, .switch_if(ntags == 1, " tag)"," tags)")), xpd=T, pos=1, cex=cex.inf)
         
         if(do_mid.ticks){
           axis(2, pos=0, at=AT, labels=rep("", length(AT)), las=1,cex.axis=cex.axis)
@@ -302,11 +302,11 @@ hist_tad <- function(df,
         
         if(xlab2.side == 1){
           xdiff <- par()$usr[2]/2
-          text(-xdiff, AT[1]-.5, xlab2[1], xpd=T, font=2, cex=cex.inf)
-          text(xdiff, AT[1]-.5, xlab2[2], xpd=T, font=2, cex=cex.inf)
+          text(-xdiff, AT[1]-.2, xlab2[1], xpd=T, font=2, cex=cex.inf)
+          text(xdiff, AT[1]-.2, xlab2[2], xpd=T, font=2, cex=cex.inf)
           if(plot_nrec){
-            text(-xdiff, AT[1]-1-space, paste0("n(periods) = ", tad.sm$nrec[which(tad.sm[[split_by]] == split_levels[1])]), xpd=T, cex=cex.inf-.1)
-            text(xdiff, AT[1]-1-space, paste0("n(periods) = ", tad.sm$nrec[which(tad.sm[[split_by]] == split_levels[2])]), xpd=T, cex=cex.inf-.1)
+            text(-xdiff, AT[1]-1.1-space, paste0("n(periods) = ", tad.sm$nrec[which(tad.sm[[split_by]] == split_levels[1])]), xpd=T, cex=cex.inf-.1)
+            text(xdiff, AT[1]-1.1-space, paste0("n(periods) = ", tad.sm$nrec[which(tad.sm[[split_by]] == split_levels[2])]), xpd=T, cex=cex.inf-.1)
           }
           #           if(plot_ntags){
           #             text(-xdiff, .5, paste0("n(tags) = ", tad.sm$nrec[which(tad.sm[[split_by]] == split_levels[1])]), xpd=T, cex=cex.inf-.1)

@@ -20,7 +20,7 @@ ggplotly_geopos <- function(ggobj, fixedrange=F, grid=F,expand=10){
   if(any(grepl("Rect",layer.types))) p <- ggedit::remove_geom(p,"rect",1)
   if(any(grepl("GeomSf",layer.types))) p <- ggedit::remove_geom(p,"GeomSf",1)
   p2 <- p + theme(panel.grid.major= element_blank())
-  f <- f0 <- plotly::ggplotly(p2)
+  f <- f0 <- plotly::ggplotly(p2,dynamicTicks=F)
   
   xticks <- f$x$layout$xaxis$tickvals
   xdiff <- diff(xticks)
@@ -53,7 +53,7 @@ ggplotly_geopos <- function(ggobj, fixedrange=F, grid=F,expand=10){
   p2 <- ggedit::remove_geom(p,"rect",1)
   p2 <- ggedit::remove_geom(p2,"rect",1)
   if(!grid) p2 <- p2 + theme(panel.grid.major= element_blank())
-  f <- plotly::ggplotly(p2, tooltip=c("group","text"))
+  f <- plotly::ggplotly(p2, tooltip=c("group","text"),dynamicTicks=F)
   
   ax <- list(
     showline = TRUE,
