@@ -78,11 +78,11 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
         if(!na.omit) sm <- sm[which(sm$perc != 0),] 
         
         year <- .date2year(sm$date)[1]
-        sm$date <- gsub(year,"0",sm$date)
-        sm$date <- gsub(year+1,"1",sm$date)
-        sm$date <- gsub(year+2,"2",sm$date)
-        
-        out <- merge(sm,data.frame(date=as.character(x_dates)),all=T)
+        sm$date <- gsub(year,"0000",sm$date)
+        sm$date <- gsub(year+1,"0001",sm$date)
+        sm$date <- gsub(year+2,"0002",sm$date)
+        sm$date <- as.Date(sm$date)
+        out <- merge(sm,data.frame(date=x_dates),all=T,by="date")
         m_ts[(nrow(m)+1-i),] <- out$perc
       }
     }
@@ -107,11 +107,11 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
         sm <- merge(sm0, y =data.frame(date=m_dates), all=T, by="date")
         if(na.omit) sm[[type2]][which(is.na(sm[[type2]]))] <- 0
         year <- .date2year(sm$date)[1]
-        sm$date <- gsub(year,"0",sm$date)
-        sm$date <- gsub(year+1,"1",sm$date)
-        sm$date <- gsub(year+2,"2",sm$date)
-        
-        out <- merge(sm,data.frame(date=as.character(x_dates)),all=T)
+        sm$date <- gsub(year,"0000",sm$date)
+        sm$date <- gsub(year+1,"0001",sm$date)
+        sm$date <- gsub(year+2,"0002",sm$date)
+        sm$date <- as.Date(sm$date)
+        out <- merge(sm,data.frame(date=x_dates),all=T,by="date")
         m_hist[(nrow(m)+1-i),] <- out[[type2]]
       }
     }
@@ -136,11 +136,11 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
         if(!na.omit) sm <- sm[which(sm[[type2]] != 0),] 
         
         year <- .date2year(sm$date)[1]
-        sm$date <- gsub(year,"0",sm$date)
-        sm$date <- gsub(year+1,"1",sm$date)
-        sm$date <- gsub(year+2,"2",sm$date)
-        
-        out <- merge(sm,data.frame(date=as.character(x_dates)),all=T)
+        sm$date <- gsub(year,"0000",sm$date)
+        sm$date <- gsub(year+1,"0001",sm$date)
+        sm$date <- gsub(year+2,"0002",sm$date)
+        sm$date <- as.Date(sm$date)
+        out <- merge(sm,data.frame(date=x_dates),all=T,by="date")
         m_lightlocs[(nrow(m)+1-i),] <- out[[type2]]
       }
     }
