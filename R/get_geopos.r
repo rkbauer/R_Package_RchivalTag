@@ -75,7 +75,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
     pols <- c()
     for(i in 1:length(datetime)){
       if(verbose) print(datetime[i])
-      Raster.LR0 <- raster::raster(file,varname = "twelve_hour_likelihoods",band = i)
+      tmp <- invisible(capture.output(Raster.LR0 <- raster::raster(file,varname = "twelve_hour_likelihoods",band = i)))
       Raster.LR <- raster::extend(Raster.LR0, Boundaries) #then extends any of your surfaces with the set boundaries
       #You can then use stack() to stack multiple tags, and overlay() to merge them together into a single probability surface.
       #To interpolate a surface (resample it at a higher resolution):

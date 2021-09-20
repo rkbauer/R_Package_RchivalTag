@@ -15,7 +15,7 @@ In addition, temperature at depth profiles can be interpolated and then visualiz
 }
 
 \usage{
-bin_TempTS(ts, res=8)
+bin_TempTS(ts, res=8, verbose=FALSE)
 }
  
 
@@ -26,8 +26,11 @@ bin_TempTS(ts, res=8)
 \item{res}{the depth interval at which temperatures should be binned.
 }
 
+\item{verbose}{
+whether the sampling dates should be indicated during the binning process (by default \code{FALSE}).
 }
 
+}
 
 
 \value{

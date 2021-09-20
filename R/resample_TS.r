@@ -1,5 +1,5 @@
 
-resample_TS <- function(df, tstep){
+resample_TS <- function(df, tstep, nsims){
   tsims <- list()
   tstep0 <- tstep
   min_tstep <- unique(as.numeric(diff(df$datetime[1:10]))) #"corresponds to raw data sets!"
@@ -17,6 +17,9 @@ resample_TS <- function(df, tstep){
   tag <- paste(df[1,which(names(df) %in% c('Serial','tag',"Ptt","DeployID"))],collapse=" - ")
   # head(df)
   tstart <- tstarts[1]
+  if(missing(nsims)) nsims <- length(tstarts)
+  if(nsims > length(tstarts)) nsims <- length(tstarts)
+  if(nsims < length(tstarts)) tstarts <- tstarts[1:nsims]
   for(tstart in tstarts){
     cat('resampling time series data from tag',tag,'with time step', tstep, 's - repetition',tstart,"of", tail(tstarts,1),'\n')
     ii <- which(as.character(df$datetime) %in% as.character(seq(df$datetime[tstart],df$datetime[nrow(df)],by=tstep0)))

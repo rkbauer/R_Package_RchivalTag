@@ -1,12 +1,12 @@
 
 resample_DepthTempTS <- function(ts_df, ...){
-  m <- interpolate_TempDepthProfiles(ts_df, ...)
+  m <- interpolate_TempDepthProfiles(ts_df, verbose=FALSE, ...)
   out <- .resample_interpDepthTempTS(ts_df, m)
   return(out)
 }
 
 resample_PDT <- function(ts_df, PDT, ...){
-  m <- interpolate_PDTs(PDT, ...)  
+  m <- interpolate_PDTs(PDT, verbose=FALSE, ...)  
   out <- .resample_interpDepthTempTS(ts_df, m)
   return(out)
   }

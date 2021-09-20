@@ -16,7 +16,7 @@ ggplot_geopos(x, ggobj, xlim, ylim, zlim, standard_year=FALSE,
               Breaks, cb.title, cb.date_format, cbpos, cb.height = 10, cb.xlab = "",
               cb.reverse=FALSE, pal.reverse=cb.reverse, prob_lim=.75, color_by="date", 
               pal, alpha=70, type="p",
-              main ,lwd=1, size=2, shape=19, ...)
+              main ,lwd=1, size=2, shape=19, verbose= FALSE, ...)
             
 get_geopos(x, xlim, ylim, date_format, lang_format="en", tz="UTC", 
            proj4string, prob_lim=.5,verbose=TRUE)
@@ -110,7 +110,7 @@ an overall title for the plot
 }
 
 \item{verbose}{
-whether the file names should be printed during loading (By default \code{TRUE}).
+whether the file names should be printed during loading geolocation files(By default \code{TRUE} for \code{get_geopos()}, but \code{FALSE} for \code{ggplot_geopos()}).
 }
 
 }

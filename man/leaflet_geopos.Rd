@@ -59,7 +59,7 @@ whether to show the scale bar or the slide bar.
 }
 
 
-\seealso{\link{ggplotly_geopos}, \link{ggplot_geopos}} 
+\seealso{\link{ggplotly_geopos}, \link{ggplot_geopos}, link{update_leaflet_elementId}} 
 
 
 \author{
@@ -85,5 +85,21 @@ Robert K. Bauer
 # # ggplot_geopos(ggobj = ggobj,k2)
 # leaflet_geopos(k0,ID_label="DeployID",collapsedLayers = F) %>% addMiniMap()
 # leaflet_geopos(k0,ID_label="DeployID",showSlideBar = T)
+#
+## Code to illustrate how to avoid rendering issues in RMarkdown:
+## only valid in RMarkdown chunks:
+# kmz_file2 <- system.file("example_files/15P0986-15P0986-2-GPE3.kmz",package="RchivalTag")
+# k2 <- get_geopos(kmz_file2)
+# k0 <- k3 <- rbind(k1,k2)
+#
+# library(leaflet)
+# map <- leaflet_geopos(k0, ID_label="DeployID", collapsedLayers = F)
+# map
+# map # plot again to show rendering issues (in the layer menu title)
+## this is required to avoid rendering issues when plotting the same map twice via RMarkdown 
+# map <- update_leaflet_elementId(map) 
+#
+# plot again with updated elementID:
+# map %>% addMiniMap()
 }
 

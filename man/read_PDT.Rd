@@ -26,7 +26,7 @@ Bauer, R., F. Forget and JM. Fromentin (2015) Optimizing PAT data transmission: 
 
 
 \usage{
-read_PDT(pdt_file, folder, sep=",",date_format,tz="UTC")
+read_PDT(pdt_file, folder, sep=",",date_format,lang_format="en",tz="UTC")
 }
  
 
@@ -43,9 +43,10 @@ path to pdt-file.
 the field separator character. Values on each line of the file are separated by this character (default is ',').
 }
 
-\item{date_format,tz}{
-character strings indicating the date format and the corresponding time zone of the histogram file, defined by the vectors Date and Time (by default: date_format="\%H:\%M:\%S \%d-\%b-\%Y, tz='UTC'")}
-
+\item{date_format, lang_format, tz}{
+character strings indicating the date format, language format and the corresponding time zone, defined by the vectors Date and Time (by default: date_format="\%H:\%M:\%S \%d-\%b-\%Y", lang_format="en", tz='UTC')
+If formatting fails, please check as well the input language format, defined by \code{lang_format} (and use abbrviations such as "en" for English,"es" for Spanish, "fr" for French, etc.) as well.
+}
 }
 
 \value{A \link{data.frame} with the columns:\cr

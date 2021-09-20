@@ -1,7 +1,7 @@
 ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_year=standard_year, date_format, lang_format="en", tz="UTC", 
                           Breaks, cb.title, cb.date_format, cbpos, cb.height = 10, cb.xlab = "",
                           cb.reverse=FALSE, pal.reverse=cb.reverse, prob_lim=.75, color_by="date", pal, alpha=70, type="p", main ,lwd=1, size=2, 
-                          shape=19, ...){
+                          shape=19, verbose= FALSE, ...){
   fill_scale <- F
   trans <- "identity"
   if(cb.reverse) trans <- 'reverse'
@@ -17,7 +17,7 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
   
   if(is.character(x)) {
     if(substr(x,nchar(x)-3,nchar(x)) == ".nc") date_format <- "%Y-%m-%d %H:%M:%S"
-    x <- get_geopos(x)
+    x <- get_geopos(x, verbose=verbose, date_format=date_format)
   }
   
   if(missing(date_format)) date_format <- "%d-%b-%Y %H:%M:%S"

@@ -1,11 +1,11 @@
 interpolate_PDTs <- function(ts, Temp_field="MeanPDT", ID_key="Serial", #return_as_matrix=FALSE, 
-                             Depth_res=.5, show_info=TRUE, Data_Source='station'){
+                             Depth_res=.5, verbose=TRUE, Data_Source='station'){
   interpolate_TempDepthProfiles(ts=ts, Temp_field=Temp_field, ID_key=ID_key, #return_as_matrix=FALSE, 
-                                Depth_res=Depth_res, show_info=show_info, Data_Source=Data_Source)
+                                Depth_res=Depth_res, verbose=verbose, Data_Source=Data_Source)
 }
 
 interpolate_TempDepthProfiles <- function(ts, Temp_field="Temperature", ID_key="Serial", #return_as_matrix=FALSE, 
-                                          Depth_res=.5, show_info=TRUE, Data_Source='station'){ 
+                                          Depth_res=.5, verbose=TRUE, Data_Source='station'){ 
   var <- 'Depth'
   out <- list()
   #   out <- out_list <- list()
@@ -35,7 +35,7 @@ interpolate_TempDepthProfiles <- function(ts, Temp_field="Temperature", ID_key="
     sm <- c()
     for(sids in 1:ndates){
       d0 <- dates[sids]
-      if(show_info) print(paste(Data_Source, id,'- set:',d0))
+      if(verbose) cat(paste(Data_Source, id,'- set:',d0,"\n"))
 
       d <- dates.ch[sids]
       i <- which(ts_sub$date.ch %in% d)

@@ -1,4 +1,4 @@
-bin_TempTS <- function(ts, res=8){
+bin_TempTS <- function(ts, res=8, verbose=FALSE){
   
   sm0 <- plyr::ddply(ts,c("date"),function(x)c(nrecTempTS=nrow(x[which(!is.na(x$Temperature) & !is.na(x$Depth)),]))) ## check if dates missing!
   if(any(sm0$nrecTempTS == 0)) warning('no Temperature/DepthTS available for dates:\n',paste(sm0$date[which(sm0$nrecTempTS == 0)],collapse=", "))
@@ -14,7 +14,7 @@ bin_TempTS <- function(ts, res=8){
   pdt.rec <- c()
   d <- dates[1]
   for(d in dates){
-    print(d)
+    if(verbose) cat(paste(d,"\n"))
     i <- which(ts$date == d)
     x <- ts[i,]
     

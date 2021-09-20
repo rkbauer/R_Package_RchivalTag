@@ -12,7 +12,7 @@ estimates thermal stratification indices, including thermocline depth, gradient,
 
 \usage{
 get_thermalstrat(x, dz=20, strat_lim=100, na.rm=FALSE, 
-                 show_info=TRUE, Depth_res, all_info=FALSE)
+                 verbose=TRUE, Depth_res, all_info=FALSE)
 }
  
 
@@ -47,7 +47,7 @@ up to which depth (in meters) temperature values should be considered for the es
 numeric value, defining the depth resolution at which the temperature data should be interpolated.
 }
 
-\item{show_info}{
+\item{verbose}{
 whether the process of the function run should be indicated (by default TRUE).
 }
 

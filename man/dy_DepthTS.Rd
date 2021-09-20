@@ -77,7 +77,7 @@ Whether to indicate add points to the figure at the sampling time steps as well 
 }
 
 \item{tz}{
-The time zone in which the data should be illustrated (By default "UTC"). ATTENTION: The required date format of the input data is "UTC" (across all RchivalTag-functions).
+The time zone in which the data should be illustrated (By default "UTC"). ATTENTION: The required date format of the input data is "UTC" (across all RchivalTag-functions). Run \code{OlsonNames(tzdir = NULL)} for valid time zone definitions.
 }
 
 

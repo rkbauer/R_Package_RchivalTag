@@ -1,8 +1,12 @@
 leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, collapsedLayers=TRUE,
                            radius=1000, pal, layer_title=ID_label, cb.title="Date",cbpos="bottomright",
                            showScaleBar=TRUE, showSlideBar=FALSE){
-  
+  mapID <- paste0("map",round(runif(1,0,10000000),0))
   ID_labels <- c("DeployID","Serial","datetime","speed","prob_lim")
+  if(missing(ID_label)) {
+    warning("No ID_label defined, setting to DeployID!")
+    ID_label <- "DeployID"
+  }
   if(!(ID_label %in% names(data))) stop(paste(ID_label,"not in geolocation data. Please revise!"))
   # if(missing(except_label)) except_label <- c()
   # except_label <- c(except_label,ID_label)
@@ -35,7 +39,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
       data$time <- data$datetime
     }
     
-    m <- leaflet() %>%
+    m <- leaflet(elementId = mapID) %>%
       addTiles(group = "OSM (default)") %>%
       addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
       addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
@@ -50,7 +54,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
                                range = TRUE))
     overlayGroups <- character(0)
   }else{
-    m <- leaflet(data) %>%
+    m <- leaflet(data,elementId = mapID) %>%
       addTiles(group = "OSM (default)") %>%
       addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
       addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
@@ -86,10 +90,12 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     
     ltitle <- "
         function() {
-            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">ID_label</label>');
+            $('#mapID .leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">ID_label</label>');
         }
     "
     ltitle <- gsub("ID_label",layer_title,ltitle)
+    ltitle <- gsub("mapID",mapID,ltitle)
+    
     m <- m %>%
       onRender(ltitle)
   }
@@ -139,4 +145,12 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     data$X <- paste0(data$X,'<strong>',i,': </strong>',data[[i]],'<br>')
   }
   return(data)
+}
+
+update_leaflet_elementId <- function(map){
+  new_map_ID <- paste0("map",round(runif(1,0,10000000),0))
+  old_map_ID <- map$elementId
+  map$elementId <- new_map_ID
+  map$jsHooks$render[[1]]$code <- gsub(old_map_ID,new_map_ID,map$jsHooks$render[[1]]$code)
+  return(map)
 }

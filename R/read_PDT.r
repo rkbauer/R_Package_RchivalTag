@@ -1,4 +1,4 @@
-read_PDT <- function(pdt_file, folder, sep=",",date_format,tz="UTC"){
+read_PDT <- function(pdt_file, folder, sep=",",date_format,lang_format="en",tz="UTC"){
   
   options(warn=0)
   pdt_all <- c()
@@ -54,9 +54,8 @@ read_PDT <- function(pdt_file, folder, sep=",",date_format,tz="UTC"){
       }
     }
   }
-  lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
   if(missing(date_format)) date_format <- "%H:%M:%S %d-%b-%Y"
-  pdt_all$datetime <- strptime(pdt_all$Date,date_format,tz=tz)
+  pdt_all$datetime <-.fact2datetime(pdt_all$Date, date_format=date_format, lang_format = lang_format,tz = tz)
   pdt_all$date <- as.Date(pdt_all$datetime)
   
   # check if date conversion worked out

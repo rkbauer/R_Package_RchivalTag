@@ -1,4 +1,4 @@
-get_thermalstrat <- function(x, dz=20, strat_lim=100, na.rm=FALSE, show_info=TRUE, Depth_res, all_info=FALSE){
+get_thermalstrat <- function(x, dz=20, strat_lim=100, na.rm=FALSE, verbose=TRUE, Depth_res, all_info=FALSE){
   
   ### script follows max. negative slope method as explained in Fielder, 2010
   ### Temperature data must be lineary interpolated before execution
@@ -12,7 +12,7 @@ get_thermalstrat <- function(x, dz=20, strat_lim=100, na.rm=FALSE, show_info=TRU
   if(is.null(Temperature_matrix)){
     out <- c()
     for(id in names(x)){
-      tag_thermo <- get_thermalstrat(x[[id]], Depth_res=Depth_res, dz=dz, strat_lim=strat_lim, na.rm=na.rm, show_info=show_info,all_info=all_info)
+      tag_thermo <- get_thermalstrat(x[[id]], Depth_res=Depth_res, dz=dz, strat_lim=strat_lim, na.rm=na.rm, verbose=verbose,all_info=all_info)
       tag_thermo$ID <- id
       out <- rbind(out, tag_thermo)
     }
@@ -33,7 +33,7 @@ get_thermalstrat <- function(x, dz=20, strat_lim=100, na.rm=FALSE, show_info=TRU
     mld <- mld_0.5 <- mld_0.8 <- tgrad <- tcline <- maxDepth_interp <- rep(NA, ncol(Temperature_matrix)) # dummy vectors to be filled up
     out <- c()
     for(i in ii){
-      if(show_info) cat(paste0(round(i*100/ndays, 1), "% done\n"))
+      if(verbose) cat(paste0(round(i*100/ndays, 1), "% done\n"))
       j <- which(!is.na(Temperature_matrix[, i]))
       maxDepth_interp[i] <- max(j)*Depth_res
       if(length(j) > dZ){
@@ -55,7 +55,7 @@ get_thermalstrat <- function(x, dz=20, strat_lim=100, na.rm=FALSE, show_info=TRU
       }
       temp_interp2 <- interpolate_TempDepthProfiles(ts = data.frame(Depth=Depth[j], Temp=Temperature_matrix[j, i], date=x$Date[i]),
                                                     Temp_field = 'Temp', #return_as_matrix = T,
-                                                    Depth_res = 1, show_info = F)[[1]]
+                                                    Depth_res = 1, verbose = F)[[1]]
       temp_mld <- data.frame(Depth=temp_interp2$Depth, Temp=temp_interp2$Temperature_matrix)
       temp_mld <- temp_mld[which(!is.na(temp_mld$Temp)), ]
       

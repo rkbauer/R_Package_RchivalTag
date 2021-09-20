@@ -137,7 +137,7 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
         
         if(tstep < 24 & force_24h & nrow(out) > 1 & !missing(min_perc)){
           if(min_perc > 0){
-            warning("original ",Type, " histogram data with incompatible time step of ", tstep,"h. Summing up data to 24h intervals")
+            warning("Original ",Type, " histogram data with incompatible time step of ", tstep,"h. Summing up data to 24h intervals\n")
             out2 <- c()
             
             for(d in as.character(unique(out$date))){
@@ -154,8 +154,9 @@ read_histos <- function(hist_file, date_format, lang_format="en", tz="UTC", dep.
               # hist_list[[Type]][[id]]$bin_breaks <- stats$bin_breaks
               add <- cbind(info,stats$df)
               add$nperc_dat <- sum(out$nperc_dat[i])
-              if(any(add$nperc_dat) > 120) stop("Error in combining data. Reaching > 100%")
-              if(any(add$nperc_dat) > 100) add$nperc_dat[which(add$nperc_dat > 100)] <- 100
+
+              if(any(add$nperc_dat > 120)) stop("Error in combining data. Reaching > 100%")
+              if(any(add$nperc_dat > 100)) add$nperc_dat[which(add$nperc_dat > 100)] <- 100
               add$nrec <- sum(out$nrec[i])
               add$duration <- sum(out$duration[i])
               add$tstep <- 24

@@ -98,7 +98,10 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
     }
     
     if(is.null(df[["date"]])) df$date <- as.Date(df$datetime)
-    df$hour <- factor(.datetime2hour(df$datetime,tz = tz),levels=0:23)
+    df$hour <- round(.datetime2hour.dc(df$datetime,tz = tz))
+    df$hour[which(df$hour == 24)] <- 0
+    df$hour <- factor(df$hour,levels=0:23)
+    
     if(any(df$Depth < 0,na.rm = T)) df$Depth[which(df$Depth < 0)] <- 0
     df$DeployID <- df$Ptt <- df[[ID_label]]
     h <- ts2histos(df,tad_breaks = c(0,100,5000),min_perc = min_perc,aggregate_by = ID_label)
@@ -121,7 +124,7 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
       if(!missing(pal)) warning("color_by argument ignored since jitter = FALSE")
       outlier.shape <- 19
     }
-    xlim <- c(0,24.5)
+    xlim <- c(0.5,24.5)
     
     if(missing(ylim)) ylim <- pretty(df$Depth)
     ylim <- rev(range(ylim))
@@ -137,16 +140,14 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
       ylab(ylab) +
       xlab(xlab) +
       theme_classic(base_size=14) 
-    
+    ggobj2 <- ggobj
     if(plot_DayTimePeriods){
       ### calculate sunset/sunrise hours
-      sunrise <- mean(.datetime2hour.dc(df$sunrise,tz=tz))
-      sunset <- mean(.datetime2hour.dc(df$sunset,tz=tz))
-      dawn <- mean(.datetime2hour.dc(df$dawn.ast,tz=tz))
-      dusk <- mean(.datetime2hour.dc(df$dusk.ast,tz=tz))
-      print(head(df))
-      ggobj <- ggobj  +annotate("rect", xmin=xlim[1], xmax=xlim[2], ymin=ylim[2], ymax=ylim[1], fill="grey")
-      
+      sunrise <- mean(.datetime2hour.dc(df$sunrise,tz=tz))+1
+      sunset <- mean(.datetime2hour.dc(df$sunset,tz=tz))+1
+      dawn <- mean(.datetime2hour.dc(df$dawn.ast,tz=tz))+1
+      dusk <- mean(.datetime2hour.dc(df$dusk.ast,tz=tz))+1
+      ggobj <- ggobj + annotate("rect", xmin=xlim[1], xmax=xlim[2], ymin=ylim[2], ymax=ylim[1], fill="grey")
       if(sunset[1] < sunrise[1]){
         ggobj <- ggobj +
           annotate("rect", xmin = sunrise, xmax = xlim[2], ymin=ylim[2], ymax=ylim[1], fill="white") + 
@@ -159,7 +160,6 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
         annotate("rect", xmin = dawn, xmax = sunrise, ymin=ylim[2], ymax=ylim[1], fill="grey90") + 
         annotate("rect", xmin = sunset, xmax = dusk, ymin=ylim[2], ymax=ylim[1], fill="grey90")
     }
-    
     ggobj <- ggobj + geom_boxplot(aes_string(y="Depth",x="hour"),outlier.shape=outlier.shape)
     
     ggobj <- ggobj + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
