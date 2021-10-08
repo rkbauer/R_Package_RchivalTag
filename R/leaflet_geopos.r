@@ -1,6 +1,7 @@
 leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, collapsedLayers=TRUE,
-                           radius=1000, pal, layer_title=ID_label, cb.title="Date",cbpos="bottomright",
+                           radius=1000, pal, layer_title=ID_label, colorby="date", cb.title, cbpos="bottomright",
                            showScaleBar=TRUE, showSlideBar=FALSE){
+  if(missing(cb.title)) cb.title <- stringr::str_to_title(colorby)
   mapID <- paste0("map",round(runif(1,0,10000000),0))
   ID_labels <- c("DeployID","Serial","datetime","speed","prob_lim")
   if(missing(ID_label)) {
@@ -8,6 +9,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     ID_label <- "DeployID"
   }
   if(!(ID_label %in% names(data))) stop(paste(ID_label,"not in geolocation data. Please revise!"))
+  data[[ID_label]] <- as.character(data[[ID_label]]) # required to facilitate label-selection in legend
   # if(missing(except_label)) except_label <- c()
   # except_label <- c(except_label,ID_label)
   
@@ -21,72 +23,31 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     }
   }
   
-  cpal = colorNumeric(palette = pal, domain = data$datenm) 
-  data$datenm <- as.numeric(as.Date(data$datetime))
-  data <- .make_labels(data,ID_label=ID_label,add_label=add_label, except_label=except_label)
-  labs <- as.list(data$X)
+  m <- leaflet(data,elementId = mapID) %>%
+    addTiles(group = "OSM (default)") %>%
+    addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
+    addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
   
-  if(showSlideBar) {
-    labs <- data$X
-    
-    if(class(data) == "data.frame"){
-      data <- SpatialPointsDataFrame(data=data,data[,c("Lon","Lat")])
-      data <- sf::st_as_sf(data)
-      data <- st_cast(data, "POINT")
-      data$time <- data$datetime
-    }else{
-      data <- sf::st_as_sf(data)
-      data$time <- data$datetime
-    }
-    
-    m <- leaflet(elementId = mapID) %>%
-      addTiles(group = "OSM (default)") %>%
-      addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
-      addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
-    m <- m %>% addTimeslider(data = data, color = ~cpal(data$datenm),
-                             # opacity = opac, fillOpacity = opac,
-                             # radius = sample(5:15, nrow(data), TRUE),
-                             popupOptions = popupOptions(maxWidth = 1000, closeOnClick= F, closeButton = FALSE),
-                             popup = labs,
-                             options = timesliderOptions(
-                               alwaysShowDate = TRUE,
-                               sameDate = TRUE,
-                               range = TRUE))
-    overlayGroups <- character(0)
-  }else{
-    m <- leaflet(data,elementId = mapID) %>%
-      addTiles(group = "OSM (default)") %>%
-      addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
-      addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
-    
+  if(colorby != "date"){
+    data$ID <- data[[ID_label]]
+    data$IDnm <- as.numeric(data$ID)
+    cpal <- colorFactor(palette = pal, domain = data$ID, na.color = "white")
+    data <- data[order(data$IDnm,data$date,data$datetime),]
     overlayGroups <- ids <- unique(data[[ID_label]])
-    
-    if(class(data) == "SpatialPolygonsDataFrame"){
-      for(id in ids){
-        add <- data[which(data[[ID_label]] == id),]
-        # add <- add[order(add$datetime),]
-        add@plotOrder <- order(-as.numeric(add$datetime))
-        m <- m %>% addPolygons(data = add, color = ~cpal(datenm),label = lapply(labs, shiny::HTML), group = id) 
-      }
-    }
+    data <- .make_labels(data,ID_label="IDnm",add_label=add_label, except_label=except_label)
+    labs <- as.list(data$X)
     
     if(class(data) == "data.frame"){
       for(id in ids){
         add <- data[which(data[[ID_label]] == id),]
-        add <- add[order(add$datetime),]
-        m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
+        add <- add[order(add$IDnm),]
+        m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$IDnm),
                               label = lapply(labs, shiny::HTML),radius =radius, group = id)
       }
     }
-    
-    if(class(data) == "SpatialPointsDataFrame"){
-      for(id in ids){
-        add <- data[which(data[[ID_label]] == id),]
-        add <- add[order(add$datetime),]
-        m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
-                              label = lapply(labs, shiny::HTML),radius =radius, group = id)
-      }
-    }
+    m <- m %>% 
+      leaflet::addLegend(cbpos, pal = cpal, values = as.character(ids), 
+                         title = cb.title, opacity = 1) 
     
     ltitle <- "
         function() {
@@ -95,16 +56,89 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     "
     ltitle <- gsub("ID_label",layer_title,ltitle)
     ltitle <- gsub("mapID",mapID,ltitle)
-    
+
     m <- m %>%
       onRender(ltitle)
+
+  }else{
+    data$datenm <- as.numeric(as.Date(data$datetime))
+    cpal = colorNumeric(palette = pal, domain = data$datenm) 
+    data <- .make_labels(data,ID_label=ID_label,add_label=add_label, except_label=except_label)
+    labs <- as.list(data$X)
+    
+    if(showSlideBar) {
+      labs <- data$X
+      
+      if(class(data) == "data.frame"){
+        data <- SpatialPointsDataFrame(data=data,data[,c("Lon","Lat")])
+        data <- sf::st_as_sf(data)
+        data <- st_cast(data, "POINT")
+        data$time <- data$datetime
+      }else{
+        data <- sf::st_as_sf(data)
+        data$time <- data$datetime
+      }
+      
+      m <- m %>% addTimeslider(data = data, color = ~cpal(data$datenm),
+                               # opacity = opac, fillOpacity = opac,
+                               # radius = sample(5:15, nrow(data), TRUE),
+                               popupOptions = popupOptions(maxWidth = 1000, closeOnClick= F, closeButton = FALSE),
+                               popup = labs,
+                               options = timesliderOptions(
+                                 alwaysShowDate = TRUE,
+                                 sameDate = TRUE,
+                                 range = TRUE))
+      overlayGroups <- character(0)
+    }else{
+      
+      overlayGroups <- ids <- unique(data[[ID_label]])
+      
+      if(class(data) == "SpatialPolygonsDataFrame"){
+        for(id in ids){
+          add <- data[which(data[[ID_label]] == id),]
+          # add <- add[order(add$datetime),]
+          add@plotOrder <- order(-as.numeric(add$Ptt))
+          m <- m %>% addPolygons(data = add, color = ~cpal(datenm),label = lapply(labs, shiny::HTML), group = id) 
+        }
+      }
+      
+      if(class(data) == "data.frame"){
+        for(id in ids){
+          add <- data[which(data[[ID_label]] == id),]
+          add <- add[order(add$datetime),]
+          m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
+                                label = lapply(labs, shiny::HTML),radius =radius, group = id)
+        }
+      }
+      
+      if(class(data) == "SpatialPointsDataFrame"){
+        for(id in ids){
+          add <- data[which(data[[ID_label]] == id),]
+          add <- add[order(add$datetime),]
+          m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
+                                label = lapply(labs, shiny::HTML),radius =radius, group = id)
+        }
+      }
+      
+      ltitle <- "
+        function() {
+            $('#mapID .leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">ID_label</label>');
+        }
+    "
+      ltitle <- gsub("ID_label",layer_title,ltitle)
+      ltitle <- gsub("mapID",mapID,ltitle)
+      
+      m <- m %>%
+        onRender(ltitle)
+    }
+    
+    m <- m %>% 
+      leaflet::addLegend(cbpos, pal = cpal, values = data$datenm, 
+                         title = cb.title, opacity = 1, 
+                         labFormat = .myLabelFormat(dates=TRUE)) 
   }
-  
   if(showScaleBar) m <- m %>% addScaleBar('bottomright') 
-  m <- m %>% 
-    leaflet::addLegend(cbpos, pal = cpal, values = data$datenm, 
-              title = cb.title, opacity = 1, 
-              labFormat = .myLabelFormat(dates=TRUE)) %>%
+  m <- m %>%
     addLayersControl(
       baseGroups = c("OSM (default)", "Esri.OceanBasemap", "Esri.WorldImagery"),
       overlayGroups = overlayGroups,

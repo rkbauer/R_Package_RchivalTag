@@ -11,7 +11,7 @@ This function creates a Leaflet map widget using htmlwidgets from spatial taggin
 \usage{
 leaflet_geopos(data, ID_label, add_label=NULL, except_label=NULL, 
                collapsedLayers=TRUE, radius=1000, pal,
-               layer_title=ID_label, cb.title="Date",cbpos="bottomright",
+               layer_title=ID_label, colorby="date", cb.title, cbpos="bottomright",
                showScaleBar=TRUE, showSlideBar=FALSE)
 }
 
@@ -43,8 +43,12 @@ circle size, in case of simple Lon/Lat tracking dataframes.
 character string indicating the title of the layer legend (by default defined by \code{'ID_label'}.)
 }
 
+\item{colorby}{
+character string indicating the vector for which to apply the colorbar (by default \code{'date'}.)
+}
+
 \item{cb.title}{
-character string indicating the title of the colorbar (by default \code{'Date'}.)
+character string indicating the title of the colorbar (by default inferred from \code{colorby}),
 }
 
 \item{cbpos}{
