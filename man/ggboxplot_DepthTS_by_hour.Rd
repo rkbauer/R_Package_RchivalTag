@@ -9,7 +9,7 @@ This function creates a boxplot via the ggplot library from hourly aggregated De
 }
 \usage{
 ggboxplot_DepthTS_by_hour(ts_df, ylim, min_perc=75,
-                          main="", submain, xlab,
+                          main="", submain, add_ids_to_submain=FALSE, xlab,
                           ID, ID_label="Serial",
                           plot_DayTimePeriods=TRUE, twilight.set="ast",
                           box=TRUE, jitter=FALSE, 
@@ -27,7 +27,7 @@ limits of the y-axis.
   \item{min_perc}{
 the minimum data coverage (in percent) of daily DepthTS recoords (by default 75\%).
 }
-  \item{main, submain, xlab}{
+  \item{main, submain, add_ids_to_submain, xlab}{
 The title and subtitle of the figure as well as the label of the x-axis.
 }
 
@@ -49,7 +49,7 @@ If selected, records will be colored via the different groups in the column spec
 }
 
 \item{tz}{
-The time zone in which the data should be illustrated (By default "UTC"). ATTENTION: The required date format of the input data is "UTC" (across all RchivalTag-functions). Run \code{OlsonNames(tzdir = NULL)} for valid time zone definitions.
+The time zone in which the data should be illustrated (By default "UTC"). ATTENTION: The required date format of the input data is "UTC" (across all RchivalTag-functions). Run \code{OlsonNames(tzdir = NULL)} for valid time zone definitions. Be aware that changes of the time zone will alter the internal date definition and thus may result in different datasets to be displayed (depending on the \code{min_perc} requirements). This concerns mainly partially transmitted data sets.
 }
 }
 

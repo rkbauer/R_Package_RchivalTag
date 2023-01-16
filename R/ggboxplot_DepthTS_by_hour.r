@@ -1,5 +1,5 @@
 ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
-                                      main, submain, xlab,
+                                      main, submain, add_ids_to_submain=FALSE, xlab,
                                       ID, ID_label="Serial", 
                                       plot_DayTimePeriods=TRUE, twilight.set="ast",
                                       box=TRUE, jitter=FALSE, 
@@ -28,22 +28,30 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
   if(nrow(df) == 0){
     ggobj <-  ggplot() + theme_minimal() 
   }else{
-  
+    
     if(missing(xlab)) xlab <- paste0("Time (",tz,")")
     if(!("datetime" %in% names(ts_df))) stop('no "datetime" vector provided! please revise.')
     
     ## check and fill potential data gaps:
-    datetime_nm <- as.numeric(.fact2datetime(ts_df$datetime,tz="UTC"))
-    tstep <- pracma::Mode(diff(datetime_nm))
-    if(tstep == 0) stop("time step between first valid 'y'-records is 0. please revise!")
-    add0 <- data.frame(datetime_nm=seq(datetime_nm[1],tail(datetime_nm, 1), by=tstep))
-    add0$datetime <- .num2datetime(add0$datetime_nm,tz="UTC",hours.offset = 0)
-    datetime_nm <- add0$datetime_nm <- c()
-    ts_df$datetime <- as.character(ts_df$datetime); add0$datetime <- as.character(add0$datetime)
-    ts_df <- merge(ts_df, add0, by="datetime",all=T)
+    ts_df <- df
+    ts_df_bkp <- ts_df
+    ts_df <- c()
+    ids <- unique(ts_df_bkp[[ID_label]])
+    for(id in ids){
+      tag_df <- ts_df_bkp[which(ts_df_bkp[[ID_label]] == id),]
+      datetime_nm <- as.numeric(.fact2datetime(tag_df$datetime,tz="UTC"))
+      tstep <- (pracma::Mode(diff(datetime_nm)))
+      if(tstep == 0) stop("time step between first valid 'y'-records is 0. please revise!")
+      add0 <- data.frame(datetime_nm=seq(datetime_nm[1],tail(datetime_nm, 1), by=tstep))
+      add0$datetime <- .num2datetime(add0$datetime_nm,tz="UTC",hours.offset = 0)
+      datetime_nm <- add0$datetime_nm <- c()
+      tag_df$datetime <- as.character(tag_df$datetime); add0$datetime <- as.character(add0$datetime)
+      add_tag <- merge(tag_df, add0, by="datetime",all=T)
+      ts_df <- rbind(ts_df,add_tag)
+    }
     ts_df$datetime <- .fact2datetime(ts_df$datetime, date_format = "%Y-%m-%d %H:%M:%S",tz = "UTC")
     ts_df$date <- as.Date(ts_df$datetime)
-
+    
     if(plot_DayTimePeriods){
       if('Lon' %in% names(ts_df) & 'Lat' %in% names(ts_df)){
         if(any(is.na(ts_df$Lon))){
@@ -115,7 +123,13 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
     prefix <- "Tag ID"
     if(length(ids) > 1) prefix <- "Tag IDs"
     if(missing(main)) main <- paste(prefix, paste(ids,collapse=", "), "-", paste(range(dates),collapse=" : "))
-    if(missing(submain)) submain <- paste(nrec,"days of data")
+    if(missing(submain)) {
+      if(add_ids_to_submain){
+        submain <- paste(paste(ids,collapse=", "),paste(nrec,"days of data"),sep=" | ")
+      }else{
+        submain <- paste(nrec,"days of data")
+      }
+    }
     
     if(jitter & opacity != 0) {
       outlier.shape <- NA
@@ -129,7 +143,7 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
     if(missing(ylim)) ylim <- pretty(df$Depth)
     ylim <- rev(range(ylim))
     ylab <- "Depth (m)"
-
+    
     ggobj <- ggplot(df) + 
       coord_cartesian(xlim =xlim, ylim =ylim) +
       scale_x_discrete(expand = c(0,0)) +
@@ -143,7 +157,7 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
     ggobj2 <- ggobj
     if(plot_DayTimePeriods){
       ### calculate sunset/sunrise hours
-      sunrise <- mean(.datetime2hour.dc(df$sunrise,tz=tz))+1
+      sunrise <- mean(.datetime2hour.dc(df$sunrise,tz=tz))+1 ## +1 is required because the index of the boxplots is 1:24 not 0:23
       sunset <- mean(.datetime2hour.dc(df$sunset,tz=tz))+1
       dawn <- mean(.datetime2hour.dc(df$dawn.ast,tz=tz))+1
       dusk <- mean(.datetime2hour.dc(df$dusk.ast,tz=tz))+1

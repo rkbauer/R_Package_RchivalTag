@@ -13,7 +13,7 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
     warning("user specified alpha-value > 100%, resetting to 100%!")
   }
   
-  if(missing(date_format) & class(x) == "SpatialPolygonsDataFrame") date_format <- "%d-%b-%Y %H:%M:%S"
+  if(missing(date_format) & class(x)[1] == "SpatialPolygonsDataFrame") date_format <- "%d-%b-%Y %H:%M:%S"
   
   if(is.character(x)) {
     if(substr(x,nchar(x)-3,nchar(x)) == ".nc") date_format <- "%Y-%m-%d %H:%M:%S"
@@ -33,6 +33,9 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
   if(pal.reverse) pal <- rev(pal)
   if(is.data.frame(x)){
     pos <- x
+    required_fields <- c('Serial','DeployID','Ptt','date','datetime','Lon','Lat')
+    missing_fields <- required_fields[which(!(required_fields %in% names(pos)))]
+    if(length(missing_fields) > 0) stop(paste('Missing fields in provided input data:',missing_fields, '\nPlease revise!'))
     
     if(missing(xlim)) xlim <- range(pos$Lon+c(.5,-.5))
     if(missing(ylim)) ylim <- range(pos$Lat+c(.5,-.5))
@@ -72,6 +75,8 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
       df.col$color_full <- as.character(colorRampPalette(cmap$jet)(length(cols)))
       
       pos$datenm <- as.numeric(pos$date)
+      pos$shape <- shape
+      pos$size <- size
       cmb <- merge(pos,df.col,by="datenm",all=T,sort=F)
       cmb$text <- paste("datetime:", cmb$datetime)
       
@@ -106,9 +111,13 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
       cmb2 <- cbind(cmb,add)
       cmb2$datenm[which(cmb2[[ID_Label]] != cmb2[[ID_Label]])] <- NA
       cmb2 <- cmb2[which(!is.na(cmb2$datetime)),]
-      if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=~datenm,group=as.name(ID_Label),text=~text),size=size,shape=shape))
+      
+      if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,colour=~datenm,group=as.name(ID_Label),text=~text),size=cmb$size,shape=cmb$shape)) # original, works with line color but not fill
+      # if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=~datenm,group=as.name(ID_Label),text=~text),size=cmb$size,shape=cmb$shape,fill=cmb$color))
+      # if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,group=as.name(ID_Label),text=~text),size=cmb$size,shape=cmb$shape,fill=cmb$color)) # color error
       if(type %in% c("l","b","pl")) ggobj <- ggobj + suppressWarnings(geom_segment(cmb2,mapping=aes_(x=~Lon,y=~Lat,xend=~Lon2,yend=~Lat2,
                                                                                                      colour=~datenm,group=as.name(ID_Label),text=~text),size=lwd))
+      
     }else{
       if(missing(cb.title)) cb.title <- color_by
       
@@ -125,7 +134,7 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
       ID <- cmb$color_by <- factor(cmb[[color_by]],levels=levels(df.col[[color_by]] ))
       cmb$text <- paste("datetime:", cmb$datetime)
       
-      if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=ID,text=~datetime),size=size,shape=shape))
+      if(type %in% c("p","b","pl")) ggobj <- ggobj + suppressWarnings(geom_point(cmb,mapping = aes_(x=~Lon,y=~Lat,color=ID,text=~datetime),size=size,shape=shape,fill=cmb$color))
       if(type %in% c("l","b","pl")) ggobj <- ggobj + suppressWarnings(geom_path(cmb,mapping = aes_(x=~Lon,y=~Lat,color=ID,text=~datetime),size=lwd)) 
     }
     b <- ggobj
@@ -133,6 +142,9 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
   }else{
     if(class(x) == "SpatialPolygonsDataFrame"){
       pos <- x
+      required_fields <- c('Serial','DeployID','Ptt','datetime')
+      missing_fields <- required_fields[which(!(required_fields %in% names(pos)))]
+      if(length(missing_fields) > 0) stop(paste('Missing fields in provided input data:',missing_fields, '\nPlease revise!'))
       
       pos@data$fill=colorRampPalette(pal)(nrow(pos))
       pos$id <- 1:nrow(pos)
