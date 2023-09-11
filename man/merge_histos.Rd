@@ -8,7 +8,7 @@
 merge and/or rebin TAD/TAT-frequency data
 }
 \description{
-The joint analysis of archival tagging data from different tagging programs is often hampered by differences in the tags' setups, e.g. by the user-specified temporal resolution of time series data or the definition of summary data products. The latter particuarly concerns different selected bin breaks of Time-at-Depth (TAD) and Time-at-Temperature (TAT) frequency data from archival tags by \href{http://wildlifecomputers.com/}{Wildlife Computers}.\cr
+The joint analysis of archival tagging data from different tagging programs is often hampered by differences in the tags' setups, e.g. by the user-specified temporal resolution of time series data or the definition of summary data products. The latter particuarly concerns different selected bin breaks of Time-at-Depth (TAD) and Time-at-Temperature (TAT) frequency data from archival tags by \href{https://wildlifecomputers.com/}{Wildlife Computers}.\cr
 
 The purpose of this function is to allow:\cr\cr1) a grouping of TAD and TAT data from multiple tags based on similiar bin breaks (For this, run the function with default statements, i.e. \code{force_merge} is \code{FALSE}),\cr\cr
 2) merging (rebinning) of TAD and TAT data from multiple tags based on the bin breaks that all tags have in common (To do so, run the function with \code{force_merge} set \code{TRUE}).\cr\cr

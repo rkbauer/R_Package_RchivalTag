@@ -101,7 +101,7 @@ Please note also, that if the argument 'na.omit' is set to FALSE, missing data p
 }
 
 \references{
-Bauer, R., F. Forget, JM. Fromentin and M. Capello (2020) Surfacing and vertical behaviour of Atlantic bluefin tuna (Thunnus thynnus) in the Mediterranean Sea: implications for aerial surveys. ICES Journal of Marine Science. \href{https://doi.org/10.1093/icesjms/fsaa083}{doi: 10.1093/icesjms/fsaa083}
+Bauer, R., F. Forget, JM. Fromentin and M. Capello (2020) Surfacing and vertical behaviour of Atlantic bluefin tuna (Thunnus thynnus) in the Mediterranean Sea: implications for aerial surveys. ICES Journal of Marine Science. \doi{10.1093/icesjms/fsaa083}
 }
 
 

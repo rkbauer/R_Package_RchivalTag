@@ -9,7 +9,7 @@ convert depth and temperature time series data to discrete Time-at-Depth and Tim
 convert depth and temperature time series data to discrete Time-at-Depth (TaD) and Time-at-Temperature (TaT) data (histogram data) at user-defined breakpoints
 }
 \details{
-Time-at-Depth and Time-at-Temperature fequencies (histograms) are a standard data product of archival tags (incl. tag models TDR-Mk9, PAT-Mk10 and miniPAT by \href{http://wildlifecomputers.com/}{Wildlife Computers}) that allow to assess habitat preferences of tagged animals.  It can be likewise generated from transmitted or recovered time series data sets, which is the purpose of this function. 
+Time-at-Depth and Time-at-Temperature fequencies (histograms) are a standard data product of archival tags (incl. tag models TDR-Mk9, PAT-Mk10 and miniPAT by \href{https://wildlifecomputers.com/}{Wildlife Computers}) that allow to assess habitat preferences of tagged animals.  It can be likewise generated from transmitted or recovered time series data sets, which is the purpose of this function. 
 
 However, different depth and temperature bin breaks are often used during different deployment programs, which makes a later comparitive analysis of TaT and TaD data difficult. For such cases, the functions \link{combine_histos} and \link{merge_histos} can be applied to merge TaT and TaD frequencies based on common bin breaks of different tags.
 

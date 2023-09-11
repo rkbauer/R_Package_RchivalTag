@@ -6,7 +6,7 @@
 read PDT data from archival one or multiple tags
 }
 \description{
-reads PDT data (PAT-style Depth Temperature profiles) from archival tags by \href{http://wildlifecomputers.com/}{Wildlife Computers}).
+reads PDT data (PAT-style Depth Temperature profiles) from archival tags by \href{https://wildlifecomputers.com/}{Wildlife Computers}).
 The PDT file can contain data from one or multiple tags.
 \cr\cr\strong{What are PDTs?}
 \cr PDT data provides minimum and maximum water temperatures during a user-programmed interval (usually 24h) at 8 to 16 depths. The sampled depths are thereby rounded (binned) to multiples of 8 and include the minimum and maximum depth bins as well as the 6 to 14 most frequent depth bins at which the tagged animal was located. The total number of depth bins (8 or 16) also depends on the tagged animals' behaviour. If the animal was in waters deeper than 400 m during the summary data period, the range of temperature at 16 depth bins will be reported, otherwise 8.
@@ -21,7 +21,7 @@ For instance, daily PDT data can be interpolated and then visualized using funct
 
 \references{
 Bauer, R., F. Forget and JM. Fromentin (2015) Optimizing PAT data transmission: assessing the accuracy of temperature summary data to estimate environmental conditions. Fisheries Oceanography, 24(6): 533-539, 
-\href{http://dx.doi.org/10.1111/fog.12127}{doi: 10.1111/fog.12127}
+\doi{10.1111/fog.12127}
 }
 
 

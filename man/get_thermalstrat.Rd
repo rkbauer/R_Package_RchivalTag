@@ -94,11 +94,11 @@ Robert K. Bauer
 
 \references{
 Bauer, R., F. Forget and JM. Fromentin (2015) Optimizing PAT data transmission: assessing the accuracy of temperature summary data to estimate environmental conditions. Fisheries Oceanography, 24(6): 533-539, 
-\href{http://dx.doi.org/10.1111/fog.12127}{doi: 10.1111/fog.12127}
+\doi{10.1111/fog.12127}
 
-Kara, A. B., P. A. Rochford, and H. E. Hurlburt (2000). An optimal definition for ocean mixed layer depth. Journal of Geophysical Research, 105:16803-16821, \href{http://dx.doi.org/10.1029/2000JC900072}{doi: 10.1029/2000JC900072}
+Kara, A. B., P. A. Rochford, and H. E. Hurlburt (2000). An optimal definition for ocean mixed layer depth. Journal of Geophysical Research, 105:16803-16821, \doi{10.1029/2000JC900072}
 
-Kara, A. B., P. A. Rochford, and H. E. Hurlburt (2003) Mixed layer depth variability over the global ocean. Journal of Geophysical Research, 108:3079, \href{http://dx.doi.org/10.1029/2000JC000736}{doi: 10.1029/2000JC000736}
+Kara, A. B., P. A. Rochford, and H. E. Hurlburt (2003) Mixed layer depth variability over the global ocean. Journal of Geophysical Research, 108:3079, \doi{10.1029/2000JC000736}
 
 Monterey, G., and S. Levitus (1997) Seasonal variability of mixed layer depth for the world ocean. NOAA Atlas NESDIS 14, U. S. Govt. Printing Office.
 

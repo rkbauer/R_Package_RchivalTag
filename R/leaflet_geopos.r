@@ -37,7 +37,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     data <- .make_labels(data,ID_label="IDnm",add_label=add_label, except_label=except_label)
     labs <- as.list(data$X)
     
-    if(class(data) == "data.frame"){
+    if(extends(class(data), 'data.frame')){
       for(id in ids){
         add <- data[which(data[[ID_label]] == id),]
         add <- add[order(add$IDnm),]
@@ -69,7 +69,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     if(showSlideBar) {
       labs <- data$X
       
-      if(class(data) == "data.frame"){
+      if(extends(class(data), 'data.frame')){
         data <- SpatialPointsDataFrame(data=data,data[,c("Lon","Lat")])
         data <- sf::st_as_sf(data)
         data <- st_cast(data, "POINT")
@@ -93,7 +93,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
       
       overlayGroups <- ids <- unique(data[[ID_label]])
       
-      if(class(data) == "SpatialPolygonsDataFrame"){
+      if(extends(class(data), 'SpatialPolygonsDataFrame')){
         for(id in ids){
           add <- data[which(data[[ID_label]] == id),]
           # add <- add[order(add$datetime),]
@@ -102,7 +102,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
         }
       }
       
-      if(class(data) == "data.frame"){
+      if(extends(class(data), 'data.frame')){
         for(id in ids){
           add <- data[which(data[[ID_label]] == id),]
           add <- add[order(add$datetime),]
@@ -111,7 +111,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
         }
       }
       
-      if(class(data) == "SpatialPointsDataFrame"){
+      if(extends(class(data), 'SpatialPointsDataFrame')){
         for(id in ids){
           add <- data[which(data[[ID_label]] == id),]
           add <- add[order(add$datetime),]

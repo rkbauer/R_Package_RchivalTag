@@ -42,7 +42,7 @@ hist_tad <- function(df,
     if(inside) ylab=''
   }
   
-  if(class(df) == "list"){
+  if(extends(class(df), 'list')){
     hist_list <- list()
     if(!is.null(df[[Type]]))  hist_list[[Type]] <- df[[Type]]
     if(missing(split_by) & "split_by" %in% names(hist_list[[Type]]$merged)) {

@@ -88,7 +88,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
       cl <- try(raster::rasterToContour(Raster.HR,levels = Raster.breaks),silent = T)
       
       cl0 <- cl
-      if(class(cl) != "try-error"){
+      if(!extends(class(cl), 'try-error')){
         p <- maptools::SpatialLines2PolySet(cl)
         spolys <- maptools::PolySet2SpatialPolygons(p)
         spolys@polygons[[1]]@ID <- as.character(datetime[i])

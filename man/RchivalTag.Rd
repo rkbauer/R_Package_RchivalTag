@@ -5,7 +5,7 @@
 RchivalTag - Analyzing and Interactive Visualization of Archival Tagging Data
 }
 \description{
-\code{RchivalTag} provides a set of functions to analyze and visualize different data products from Archival Tags (Supported Models include amongst others: MiniPAT, sPAT, mk10, mk9 from \href{http://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
+\code{RchivalTag} provides a set of functions to analyze and visualize different data products from Archival Tags (Supported Models include amongst others: MiniPAT, sPAT, mk10, mk9 from \href{https://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
 
 \itemize{
   \item{"(Depth) time series data"} (See \link{plot_TS}, \link{plot_DepthTS},  \link{dy_DepthTS}, \link{empty.plot_TS})
@@ -30,11 +30,11 @@ RchivalTag - Analyzing and Interactive Visualization of Archival Tagging Data
 - data visualization and examination of the thermal stratification of the water column (i.e. thermocline depth, gradient and stratification index), based on previously interpolated. The paper by Bauer et al. (2015) is highly recommended in this context. 
 
 \bold{interactive geolocation vizualiation}\cr
-- data visualization via \href{https://ggplot2.tidyverse.org/}{ggplot2} and \href{https://plotly.com/r/}{plot_ly} based on \href{https://cran.r-project.org/web/packages/oceanmap/index.html}{oceanmap} standard maps.
+- data visualization via \href{https://ggplot2.tidyverse.org/}{ggplot2} and \href{https://plotly.com/r/}{plot_ly} based on \href{https://cran.r-project.org/package=oceanmap}{oceanmap} standard maps.
 
 
 \bold{Compatibility}\cr
-So far, the package is mainly adapted for archival tagging data from \href{http://wildlifecomputers.com/}{Wildlife Computers}, but can also be applied to data from other tag manufacturers (e.g. see \link{ts2histos} in order to calculate TaD & TaT-frequencies from time series data). Function examples are based on the transmitted data sets of a miniPAT-tag from the BLUEMED-project \url{http://bluemed-project.com/}, funded by the French National Research Agency (ANR; \url{http://www.agence-nationale-recherche.fr}).
+So far, the package is mainly adapted for archival tagging data from \href{https://wildlifecomputers.com/}{Wildlife Computers}, but can also be applied to data from other tag manufacturers (e.g. see \link{ts2histos} in order to calculate TaD & TaT-frequencies from time series data). Function examples are based on the transmitted data sets of a miniPAT-tag from the \href{https://anr.fr/Project-ANR-14-ACHN-0002}{BLUEMED-project}, funded by the French National Research Agency (ANR; \url{https://www.agence-nationale-recherche.fr}).
 }
 
 %\bold{Getting Started}\cr
@@ -42,14 +42,13 @@ So far, the package is mainly adapted for archival tagging data from \href{http:
 
 
 \references{
-Bauer, R., F. Forget and JM. Fromentin (2015) Optimizing PAT data transmission: assessing the accuracy of temperature summary data to estimate environmental conditions. Fisheries Oceanography, 24(6): 533-539, 
-\href{http://dx.doi.org/10.1111/fog.12127}{doi: 10.1111/fog.12127}
+Bauer, R., F. Forget and JM. Fromentin (2015) Optimizing PAT data transmission: assessing the accuracy of temperature summary data to estimate environmental conditions. Fisheries Oceanography, 24(6): 533-539, \doi{10.1111/fog.12127}
 
-Bauer, R., JM. Fromentin, H. Demarcq and S. Bonhommeau (2017) Habitat use, vertical and horizontal behaviour of Atlantic bluefin tuna (Thunnus thynnus) in the Northwestern Mediterranean Sea in relation to oceanographic conditions. Deep-Sea Research Part II: Topical Studies in Oceanography, 141: 248-261, \href{https://doi.org/10.1016/j.dsr2.2017.04.006}{doi: 10.1016/j.dsr2.2017.04.006}
+Bauer, R., JM. Fromentin, H. Demarcq and S. Bonhommeau (2017) Habitat use, vertical and horizontal behaviour of Atlantic bluefin tuna (Thunnus thynnus) in the Northwestern Mediterranean Sea in relation to oceanographic conditions. Deep-Sea Research Part II: Topical Studies in Oceanography, 141: 248-261, \doi{10.1016/j.dsr2.2017.04.006}
 
-Bauer, R., F. Forget, JM. Fromentin and M. Capello (2020) Surfacing and vertical behaviour of Atlantic bluefin tuna (*Thunnus thynnus*) in the Mediterranean Sea: implications for aerial surveys. ICES Journal of Marine Science, 77(5): 1979-1991, \href{https://doi.org/10.1093/icesjms/fsaa083}{doi: 10.1093/icesjms/fsaa083}
+Bauer, R., F. Forget, JM. Fromentin and M. Capello (2020) Surfacing and vertical behaviour of Atlantic bluefin tuna (*Thunnus thynnus*) in the Mediterranean Sea: implications for aerial surveys. ICES Journal of Marine Science, 77(5): 1979-1991, \doi{10.1093/icesjms/fsaa083}
 
-Wildlife Computers (2016) MiniPAT-User-Guide, 4 April 2016, 26 pp. \url{http://wildlifecomputers.com/wp-content/uploads/manuals/MiniPAT-User-Guide.pdf}
+Wildlife Computers (2016) MiniPAT-User-Guide, 4 April 2016, 26 pp. \url{https://static.wildlifecomputers.com/MiniPAT-User-Guide1.pdf}
 }
 
 \author{

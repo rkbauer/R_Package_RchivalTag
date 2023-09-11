@@ -6,7 +6,7 @@
 combine lists of TAD/TAT frequency data
 }
 \description{
-This function allows to combine seperate lists of TAD/TAT frequency data from archival tags (i.e. by \href{http://wildlifecomputers.com/}{Wildlife Computers}). The function requires ungrouped/unmerged TAD/TAT lists to avoid merging duplicate records (e.g. multiple TAD/TAT lists from the same individual). However, grouped/merged lists with TAD/TAT from multiple individuals and even duplicate records can be provided, as the function includes an internal call of \link{unmerge_histos} to meet this requirement.
+This function allows to combine seperate lists of TAD/TAT frequency data from archival tags (i.e. by \href{https://wildlifecomputers.com/}{Wildlife Computers}). The function requires ungrouped/unmerged TAD/TAT lists to avoid merging duplicate records (e.g. multiple TAD/TAT lists from the same individual). However, grouped/merged lists with TAD/TAT from multiple individuals and even duplicate records can be provided, as the function includes an internal call of \link{unmerge_histos} to meet this requirement.
 }
 \usage{
 combine_histos(hist_list1, hist_list2)

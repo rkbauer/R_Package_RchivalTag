@@ -11,7 +11,7 @@ generates daily or back-to-back (e.g. Day-vs-Night-) Time-at-Depth histograms fr
 }
 
 \details{
-Time-at-Temperature (Tat) and Time-at-Depth (TaD) fequencies are a standard data product of archival tags (incl. tag models TDR-Mk9, PAT-Mk10 and miniPAT by \href{http://wildlifecomputers.com/}{Wildlife Computers}) that allow to assess habitat preferences of tagged animals (see function \link{read_histos}).  It can be likewise generated from transmitted or recovered time series data sets using function \link{ts2histos}. 
+Time-at-Temperature (Tat) and Time-at-Depth (TaD) fequencies are a standard data product of archival tags (incl. tag models TDR-Mk9, PAT-Mk10 and miniPAT by \href{https://wildlifecomputers.com/}{Wildlife Computers}) that allow to assess habitat preferences of tagged animals (see function \link{read_histos}).  It can be likewise generated from transmitted or recovered time series data sets using function \link{ts2histos}. 
 
 However, different depth and temperature bin breaks are often used during different deployment programs, which makes a later comparitive analysis of TaT and TaT data difficult. For such cases, the function \link{combine_histos} and \link{merge_histos} can be applied to merge TaT and TaD frequencies based on common bin breaks of different tags.
 

@@ -39,7 +39,7 @@ additional arguments to be passed to \link{interpolate_TempDepthProfiles}, or \l
 
 \references{
 Bauer, R., F. Forget and JM. Fromentin (2015) Optimizing PAT data transmission: assessing the accuracy of temperature summary data to estimate environmental conditions. Fisheries Oceanography, 24(6): 533-539, 
-\href{http://dx.doi.org/10.1111/fog.12127}{doi: 10.1111/fog.12127}
+\doi{10.1111/fog.12127}
 }
 
 \seealso{\link{read_PDT}, \link{interpolate_TempDepthProfiles}, \link{get_thermalstrat}, \link{image_TempDepthProfiles}} 

@@ -6,7 +6,7 @@
 reads a TAD/TAT-histogram file from archival tags
 }
 \description{
-reads or posttreats a manually loaded standard histogram data file, containing Time-at-Depth (TAD) and Time-at-Temperature (TAT) frequency data, from archival tags by \href{http://wildlifecomputers.com/}{Wildlife Computers}.
+reads or posttreats a manually loaded standard histogram data file, containing Time-at-Depth (TAD) and Time-at-Temperature (TAT) frequency data, from archival tags by \href{https://wildlifecomputers.com/}{Wildlife Computers}.
 }
 \usage{
 
@@ -17,7 +17,7 @@ read_histos(hist_file, date_format, lang_format="en", tz="UTC", dep.end, Serial,
 
 \arguments{
 \item{hist_file}{
-character string indicating the name of a standard \href{http://wildlifecomputers.com/}{Wildlife Computers} file to read or the \link{data.frame} of a manually loaded histogram data file. The combination of the columns \code{DeployID}, \code{Ptt} and \code{Serial} is assumed to provide an unique key to distinguish data from indiviudal tags.
+character string indicating the name of a standard \href{https://wildlifecomputers.com/}{Wildlife Computers} file to read or the \link{data.frame} of a manually loaded histogram data file. The combination of the columns \code{DeployID}, \code{Ptt} and \code{Serial} is assumed to provide an unique key to distinguish data from indiviudal tags.
 }
 
 \item{force_24h}{

@@ -53,7 +53,8 @@ interpolate_TempDepthProfiles <- function(ts, Temp_field="Temperature", ID_key="
         
         ### new code: (RchivalTag-package versions >= 0.07) :
         temp <- try(approx(x = k2$Depth, xout = depths, y = k2$Temperature),silent = T)
-        if(class(temp) != "try-error") {
+        if(!extends(class(temp), 'try-error')){
+            
 
         Temperature_matrix[,sids] <- temp$y
         }

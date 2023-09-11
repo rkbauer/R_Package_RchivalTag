@@ -3,6 +3,8 @@ RchivalTag versions
 upcoming:
 	- add argument "show_time_limits" in plot_TS/DepthTS
 
+RchivalTag_0.1.6 -- September 11, 2023 (Robert Bauer)
+	- fixing minor bugs to resubmit most current package version to CRAN
 
 RchivalTag_0.1.5 -- August 27, 2020 (Robert Bauer)
 	- added new ggboxplot_DepthTS_by_hour function

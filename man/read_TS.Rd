@@ -7,7 +7,7 @@ reads Time Series Data from Archival Tags
 }
 
 \description{
-reads Time Series Data (e.g. Depth and Temperature) from Archival Tags (Supported Models: MiniPAT, sPAT, recovered mk10, mk9 from \href{http://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
+reads Time Series Data (e.g. Depth and Temperature) from Archival Tags (Supported Models: MiniPAT, sPAT, recovered mk10, mk9 from \href{https://wildlifecomputers.com/}{Wildlife Computers} as well as LOTEK PSAT Models \href{https://www.lotek.com/products/psat-series/}{LOTEK}. Models from other Manufactorers might be supported as well.
 }
 
 \usage{
@@ -18,7 +18,7 @@ read_TS(ts_file, header=TRUE, sep=",", skip = 0,
 
 \arguments{
 \item{ts_file}{
-character string indicating the name of a standard \href{http://wildlifecomputers.com/}{Wildlife Computers} file to read or the \link{data.frame} of a manually loaded histogram data file. The file is assumed to include the columns \code{Day}, \code{Time} (or a preformatted date-time vector termed \code{datetime} in "UTC" format.) as well as at one of the subsequent columns \code{DeployID}, \code{Ptt} and \code{Serial} to distinguish data from indiviudal tags.
+character string indicating the name of a standard \href{https://wildlifecomputers.com/}{Wildlife Computers} file to read or the \link{data.frame} of a manually loaded histogram data file. The file is assumed to include the columns \code{Day}, \code{Time} (or a preformatted date-time vector termed \code{datetime} in "UTC" format.) as well as at one of the subsequent columns \code{DeployID}, \code{Ptt} and \code{Serial} to distinguish data from indiviudal tags.
 }
 
 \item{header}{
