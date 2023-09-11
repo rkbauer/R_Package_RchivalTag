@@ -102,7 +102,7 @@ line width
 }
 
 \item{\dots}{
-additional arguments to be passed to \link{ggplotmap}.
+additional arguments to be passed to \link[oceanmap]{ggplotmap}.
 }
 
 \item{main}{
@@ -116,7 +116,7 @@ whether the file names should be printed during loading geolocation files(By def
 }
 
 
-\seealso{\link{leaflet_geopos}, \link{ggplotly_geopos}, \link{ggplotmap}} 
+\seealso{\link{leaflet_geopos}, \link{ggplotly_geopos}, \link[oceanmap]{ggplotmap}} 
 
 
 \author{

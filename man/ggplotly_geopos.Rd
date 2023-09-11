@@ -28,7 +28,7 @@ By default, the underlying \link{ggplotly}-function does not stick to the plotti
 \details{
 \code{ggoplotmaply} uses the \code{ggplotly} functions to convert the ggplot object into the plotly format.
 }
-\seealso{ \link{leaflet_geopos}, \code{\link{ggplot_geopos},  \link{ggplotmap}, \link{ggplotly}} } 
+\seealso{ \link{leaflet_geopos}, \code{\link{ggplot_geopos},  \link[oceanmap]{ggplotmap}, \link{ggplotly}} } 
 
 
 \author{
