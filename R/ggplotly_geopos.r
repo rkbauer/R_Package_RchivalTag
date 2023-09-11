@@ -39,7 +39,7 @@ ggplotly_geopos <- function(ggobj, fixedrange=F, grid=F,expand=10){
       ydiff <- ydiff[jj[1]]
       ylim <- c(yticks[1]-(expand*ydiff),yticks[1]+(expand*ydiff))
     }
-    p <- ggplotmap(add_to = p2, lon = xlim, lat=ylim,grid.res = xdiff)
+    p <- oceanmap::ggplotmap(add_to = p2, lon = xlim, lat=ylim,grid.res = xdiff)
   }else{
     xlim <- f0$x$layout$xaxis$range
     xdiff <- diff(xlim)
@@ -48,7 +48,7 @@ ggplotly_geopos <- function(ggobj, fixedrange=F, grid=F,expand=10){
     ylim <- f0$x$layout$yaxis$range
     ydiff <- diff(ylim)
     ylim <- c(ylim[1]-(2*ydiff),ylim[2]+(2*ydiff))
-    p <- ggplotmap(add_to = p2, lon = xlim, lat=ylim)
+    p <- oceanmap::ggplotmap(add_to = p2, lon = xlim, lat=ylim)
   }
   p2 <- ggedit::remove_geom(p,"rect",1)
   p2 <- ggedit::remove_geom(p2,"rect",1)

@@ -34,7 +34,7 @@ RchivalTag - Analyzing and Interactive Visualization of Archival Tagging Data
 
 
 \bold{Compatibility}\cr
-So far, the package is mainly adapted for archival tagging data from \href{https://wildlifecomputers.com/}{Wildlife Computers}, but can also be applied to data from other tag manufacturers (e.g. see \link{ts2histos} in order to calculate TaD & TaT-frequencies from time series data). Function examples are based on the transmitted data sets of a miniPAT-tag from the \href{https://anr.fr/Project-ANR-14-ACHN-0002}{BLUEMED-project}, funded by the French National Research Agency (ANR; \url{https://www.agence-nationale-recherche.fr}).
+So far, the package is mainly adapted for archival tagging data from \href{https://wildlifecomputers.com/}{Wildlife Computers}, but can also be applied to data from other tag manufacturers (e.g. see \link{ts2histos} in order to calculate TaD & TaT-frequencies from time series data). Function examples are based on the transmitted data sets of a miniPAT-tag from the \href{https://anr.fr/Project-ANR-14-ACHN-0002}{BLUEMED-project}, funded by the French National Research Agency (ANR; \url{https://anr.fr}).
 }
 
 %\bold{Getting Started}\cr
