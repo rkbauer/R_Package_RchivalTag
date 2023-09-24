@@ -89,9 +89,16 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
       
       cl0 <- cl
       if(!extends(class(cl), 'try-error')){
-        p <- maptools::SpatialLines2PolySet(cl)
-        spolys <- maptools::PolySet2SpatialPolygons(p)
-        spolys@polygons[[1]]@ID <- as.character(datetime[i])
+        
+        ## new approach
+        if(length(cl@lines) > 1 | length(cl@lines[[1]]@Lines) > 1) warning("polygon conversion incomplete, please contact package author")
+        spolys <- SpatialPolygons(list(Polygons(list(Polygon(cl@lines[[1]]@Lines[[1]])),ID =  as.character(datetime[i]))),
+                                  proj4string = CRS(proj4string(cl)))
+        
+        ## old approach with maptools
+        # p <- maptools::SpatialLines2PolySet(cl)
+        # spolys <- maptools::PolySet2SpatialPolygons(p)
+        # spolys@polygons[[1]]@ID <- as.character(datetime[i])
         
         if(is.null(pols)){
           pols <- spolys
@@ -101,6 +108,10 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
         j <- j +1
       }
     }
+    save(pols, file="~/Desktop/test.rd")
+    load("~/Desktop/test.rd",verbose = T)
+    stop()
+    
     # pols@plotOrder <- spolys@plotOrder
     # rgeos::gBuffer(spTransform(pols, CRS(paste(proj4string(pols)))),0,byid = F)
     # which(!.clgeo_CollectionReport(pols)$valid)
@@ -143,12 +154,13 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
 
 .check_and_fill_holes <- function(x){
   ## fill potential holes:
-  report <- .clgeo_CollectionReport(x)
+  report <- cleangeo::clgeo_CollectionReport(x)
   issues <- length(which(report$valid == FALSE))
   npols <- length(x)
   if(issues >= 1){
     for(i in 1:issues){
-      new_report <- .clgeo_CollectionReport(x)
+      # stop("holes found")
+      new_report <- cleangeo::clgeo_CollectionReport(x)
       j <- which(new_report$valid == FALSE)[1]
       add <- try(buffer(x[j,],0),silent = TRUE)
       proj4string(add) <- proj4string(x)
@@ -159,46 +171,46 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
   }
   return(x)
 }
-
-.clgeo_CollectionReport	 <- function(spo){
-  clgeo_report <- as.data.frame(do.call("rbind", lapply(1:length(spo), 
-                                                        function(x) {
-                                                          report <- unlist(.clgeo_GeometryReport(spo[x, ]))
-                                                        })), stringsAsFactors = FALSE)
-  clgeo_report$valid <- as(clgeo_report$valid, "logical")
-  clgeo_report$type <- as.factor(clgeo_report$type)
-  clgeo_report$issue_type <- as.factor(clgeo_report$issue_type)
-  return(clgeo_report)
-}
-
-.clgeo_GeometryReport <- function(spgeom){ 
-  
-  clgeo_report <- list(type = NA, valid = FALSE, issue_type = NA, 
-                       error_msg = NA, warning_msg = NA)
-  report <- tryCatch({
-    isvalid <- rgeos::gIsValid(spgeom)
-    if (isvalid) 
-      clgeo_report$valid <- TRUE
-    return(clgeo_report)
-  }, warning = function(w) {
-    clgeo_report$type <- "rgeos_validity"
-    clgeo_report$valid <- FALSE
-    if (regexpr("at or near point", conditionMessage(w), 
-                "match.length", ignore.case = TRUE) > 1) 
-      clgeo_report$issue_type = "GEOM_VALIDITY"
-    clgeo_report$warning_msg <- conditionMessage(w)
-    return(clgeo_report)
-  }, error = function(e) {
-    clgeo_report$type <- "rgeos_error"
-    clgeo_report$valid <- FALSE
-    if (regexpr("orphaned hole", conditionMessage(e), "match.length", 
-                ignore.case = TRUE) > 1) 
-      clgeo_report$issue_type = "ORPHANED_HOLE"
-    clgeo_report$error_msg = conditionMessage(e)
-    return(clgeo_report)
-  })
-  return(report)
-}
+# 
+# .clgeo_CollectionReport	 <- function(spo){
+#   clgeo_report <- as.data.frame(do.call("rbind", lapply(1:length(spo), 
+#                                                         function(x) {
+#                                                           report <- unlist(.clgeo_GeometryReport(spo[x, ]))
+#                                                         })), stringsAsFactors = FALSE)
+#   clgeo_report$valid <- as(clgeo_report$valid, "logical")
+#   clgeo_report$type <- as.factor(clgeo_report$type)
+#   clgeo_report$issue_type <- as.factor(clgeo_report$issue_type)
+#   return(clgeo_report)
+# }
+# 
+# .clgeo_GeometryReport <- function(spgeom){ 
+#   
+#   clgeo_report <- list(type = NA, valid = FALSE, issue_type = NA, 
+#                        error_msg = NA, warning_msg = NA)
+#   report <- tryCatch({
+#     isvalid <- rgeos::gIsValid(spgeom)
+#     if (isvalid) 
+#       clgeo_report$valid <- TRUE
+#     return(clgeo_report)
+#   }, warning = function(w) {
+#     clgeo_report$type <- "rgeos_validity"
+#     clgeo_report$valid <- FALSE
+#     if (regexpr("at or near point", conditionMessage(w), 
+#                 "match.length", ignore.case = TRUE) > 1) 
+#       clgeo_report$issue_type = "GEOM_VALIDITY"
+#     clgeo_report$warning_msg <- conditionMessage(w)
+#     return(clgeo_report)
+#   }, error = function(e) {
+#     clgeo_report$type <- "rgeos_error"
+#     clgeo_report$valid <- FALSE
+#     if (regexpr("orphaned hole", conditionMessage(e), "match.length", 
+#                 ignore.case = TRUE) > 1) 
+#       clgeo_report$issue_type = "ORPHANED_HOLE"
+#     clgeo_report$error_msg = conditionMessage(e)
+#     return(clgeo_report)
+#   })
+#   return(report)
+# }
 
 
 .getKMLpols <- function(kmlfile, ignoreAltitude=TRUE,verbose){
