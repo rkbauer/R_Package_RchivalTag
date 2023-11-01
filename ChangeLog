@@ -3,6 +3,9 @@ RchivalTag versions
 upcoming:
 	- add argument "show_time_limits" in plot_TS/DepthTS
 
+RchivalTag_0.1.8 -- October 19, 2023 (Robert Bauer)
+	- fixing references to oceanmap package in documentation
+
 RchivalTag_0.1.7 -- September 22, 2023 (Robert Bauer)
 	- dependencies to discontinued maptools and rgeos have been removed
         - non required packages have been removed from NAMESPACE

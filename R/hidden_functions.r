@@ -33,11 +33,11 @@
   LOCALE <- readr::locale(lang_format)
   LOCALE$date_names$mon_ab <- gsub("\\.","",LOCALE$date_names$mon_ab)
   LOCALE$date_names$day_ab <- gsub("\\.","",LOCALE$date_names$day_ab)
-  out <- readr::parse_datetime(x, format = date_format, locale = LOCALE)
+  out <- suppressWarnings(readr::parse_datetime(x, format = date_format, locale = LOCALE))
   i <- is.na(out)
   j <- which(i)
   
-  if(any(i) & any(!i)) {
+  if(any(i)) {
     out[j] <- readr::parse_datetime(paste(x[j],"00:00:00"), format = date_format, locale = LOCALE)
   }
   if(tz != "UTC"){

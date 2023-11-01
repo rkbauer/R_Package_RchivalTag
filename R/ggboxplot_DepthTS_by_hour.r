@@ -78,8 +78,9 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
       is.POSIXct <- function(x) inherits(x, "POSIXct")
       fields <- names(ts_df)[sapply(ts_df, is.POSIXct)]
       for(field in fields){
-        LocalTime <- ts_df[[field]] %>% lubridate::ymd_hms(tz="UTC") %>% lubridate::with_tz(tzone=tz)
-        LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(ts_df$datetime,tz = tz)))*24*60*60
+        LocalTime <- .fact2datetime(ts_df[[field]]) %>% lubridate::with_tz(tzone=tz)
+        # LocalTime <- ts_df[[field]] %>% lubridate::ymd_hms(tz="UTC") %>% lubridate::with_tz(tzone=tz)
+        # LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(ts_df$datetime,tz = tz)))*24*60*60
         ts_df[[field]] <- LocalTime#RchivalTag:::.fact2datetime(as.character(LocalTime))
       }
       ts_df$date <- as.Date(ts_df$datetime,tz = tz)

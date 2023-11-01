@@ -59,6 +59,7 @@ ts2histos <- function(ts_df, tad_breaks=NULL, tat_breaks=NULL, split_by=NULL, ag
         sm <- cbind(Sum=100,sm,avg=avg,SD=SD,nrec=nrec,duration=duration)#NumBins=length(bin_breaks),
       })
       sm.df$nperc_dat <- round(100*sm.df$nrec/sm.df$duration,1)
+
       sm.df$datetime <- .date2datetime(sm.df$date,tz = "UTC",midday = F)
       if(is.null(sm.df$Ptt)) sm.df$Ptt <- NA
       if(is.null(split_by)) sm.df$tstep <- 24

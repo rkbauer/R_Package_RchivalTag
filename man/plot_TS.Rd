@@ -86,14 +86,14 @@ what type of plot should be drawn. Possible types are:
   \item{\code{"n"} for nothing (similar to \code{empty.plot_TS}-function call)}
 }}
 
-\item{las}{
-numeric in {0,1,2,3}; the style of axis labels.\cr\cr
-0: always parallel\cr
-1: always horizontal (default)\cr
-3: always perpendicular\cr
-4: always vertical
-
-}"
+\item{las}{numeric in \{0,1,2,3\}; the style of axis labels
+\describe{
+  \item{0:}{always parallel to the axis [\emph{default}],}
+  \item{1:}{always horizontal,}
+  \item{2:}{always perpendicular to the axis,}
+  \item{3:}{always vertical.}
+  }
+}
 
 \item{xaxs, yaxs}{
 The style of axis interval calculation to be used for the x-and y-axes. Possible values are "r" and "i" (default). The styles are generally controlled by the range of data or xlim, if given.\cr\cr

@@ -63,7 +63,7 @@ whether to show the scale bar or the slide bar.
 }
 
 
-\seealso{\link{ggplotly_geopos}, \link{ggplot_geopos}, link{update_leaflet_elementId}} 
+\seealso{\link{ggplotly_geopos}, \link{ggplot_geopos}, \link{update_leaflet_elementId}} 
 
 
 \author{

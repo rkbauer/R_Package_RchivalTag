@@ -34,7 +34,10 @@ dy_DepthTS <- dy_TS <- function(ts_df, y="Depth", xlim, ylim,
     
     dawn.set <- paste0('dawn.', twilight.set)
     dusk.set <- paste0('dusk.', twilight.set)
-    if(all(c(dawn.set, dusk.set, 'sunrise','sunset') %in% names(ts_df)) | all(c('datetime','Lon','Lat') %in% names(ts_df))){
+    if(!(all(c(dawn.set, dusk.set, 'sunrise','sunset') %in% names(ts_df)) | all(c('datetime','Lon','Lat') %in% names(ts_df)))){
+      warning("input data does not include day period information. Hence setting plot_DayTimePeriods to FALSE. \nPlease add Lon/Lat information to depth time series and consider calling function 'get_DayTimeLimits' before running 'plot_TS' to increase performance speed.")
+      plot_DayTimePeriods <- F
+    }else{
       if(!all(c(dawn.set, dusk.set, 'sunrise','sunset') %in% names(ts_df))){
         warning("not all required day period information found. calling function: 'get_DayTimeLimits'. 
             Consider to run this function before calling 'plot_TS' to increase performance speed.")
@@ -47,8 +50,9 @@ dy_DepthTS <- dy_TS <- function(ts_df, y="Depth", xlim, ylim,
     is.POSIXct <- function(x) inherits(x, "POSIXct")
     fields <- names(ts_df)[sapply(ts_df, is.POSIXct)]
     for(field in fields){
-      LocalTime <- ts_df[[field]] %>% lubridate::ymd_hms(tz="UTC") %>% lubridate::with_tz(tzone=tz)
-      LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(ts_df$datetime,tz = tz)))*24*60*60
+      LocalTime <- .fact2datetime(ts_df[[field]]) %>% lubridate::with_tz(tzone=tz)
+      # LocalTime <- ts_df[[field]] %>% lubridate::ymd_hms(tz="UTC") %>% lubridate::with_tz(tzone=tz)
+      # LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(ts_df$datetime,tz = tz)))*24*60*60
       ts_df[[field]] <- LocalTime#RchivalTag:::.fact2datetime(as.character(LocalTime))
     }
     ts_df$date <- as.Date(ts_df$datetime,tz = tz)

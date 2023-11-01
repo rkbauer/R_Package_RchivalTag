@@ -3,6 +3,7 @@
 import("grDevices")
 import("utils")
 import("maps")
+import("mapdata")
 import("cleangeo")
 import("suntools")
 import("raster",except=c(lines,barplot,image,hist,boxplot,text,plot))

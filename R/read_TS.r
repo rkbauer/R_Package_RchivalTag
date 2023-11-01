@@ -1,7 +1,7 @@
 read_TS <- function(ts_file,header=TRUE,sep=",",skip=0,date_format,lang_format="en",tz="UTC"){
   ts_df <- read.table(ts_file, skip=skip,header = header, sep = sep,stringsAsFactors = F)
 
-  if(ncol(ts_df) == 1) print(head(ts_df))
+  if(ncol(ts_df) == 1) print(head(ts_df)) ## required for debugging!
   if(missing(date_format)) date_format <- "%d-%b-%Y %H:%M:%S"
   
   if("Date.Time" %in% names(ts_df)) {
@@ -21,12 +21,10 @@ read_TS <- function(ts_file,header=TRUE,sep=",",skip=0,date_format,lang_format="
   
   ii <- which(nchar(ts_df$datetime_tmp) == 1)
   if(length(ii) > 0){
-    print(head(ts_df[ii,]))
     warning("Omitting records with no datetime information, as shown in the lines above for file: ",ts_file)
     ts_df <- ts_df[-ii,]
   }
   
-  # save(ts_df,date_format,lang_format,file="~/Desktop/file.rd")
   datetime <-.fact2datetime(ts_df$datetime_tmp, date_format=date_format, lang_format = lang_format,tz = tz)
   # ts_df$datetime_tmp <- c()
   datetime_nm <- ts_df$datetime_nm <- as.numeric(datetime)

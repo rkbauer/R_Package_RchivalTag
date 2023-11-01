@@ -86,7 +86,6 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
     if(length(xlim) == 1) xlim <- c(xlim, xlim[1]+24*60*60)
     if(length(xlim) > 2) xlim <- range(xlim)
     
-    
     if(tz != "UTC"){
       dat_list <- list(ts_df,PDT)
       for(ds in 1:2){
@@ -94,8 +93,8 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
         is.POSIXct <- function(x) inherits(x, "POSIXct")
         fields <- names(dset)[sapply(dset, is.POSIXct)]
         for(field in fields){
-          LocalTime <- dset[[field]] %>% lubridate::ymd_hms(tz="UTC") %>% lubridate::with_tz(tzone=tz)
-          LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(dset$datetime,tz = tz)))*24*60*60
+          LocalTime <- .fact2datetime(dset[[field]]) %>% lubridate::with_tz(tzone=tz)
+          # LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(dset$datetime,tz = tz)))*24*60*60
           dset[[field]] <- LocalTime #RchivalTag:::.fact2datetime(as.character(LocalTime))
         }
         dset$date <- as.Date(dset$datetime,tz = tz)
@@ -115,8 +114,8 @@ plot_DepthTempTS_resampled_PDT <- function(ts_df, PDT, y="Depth", z="Temperature
         dset <- dat_list[[ds]]
         fields <- names(dset)[sapply(dset, is.POSIXct)]
         for(field in fields){
-          LocalTime <- dset[[field]] %>% lubridate::ymd_hms(tz=tz) %>% lubridate::with_tz(tzone="UTC")
-          LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz="UTC")-as.Date(dset$datetime,tz = "UTC")))*24*60*60
+          LocalTime <- .fact2datetime(dset[[field]]) %>% lubridate::with_tz(tzone=tz)
+          # LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz="UTC")-as.Date(dset$datetime,tz = "UTC")))*24*60*60
           dset[[field]] <- LocalTime#RchivalTag:::.fact2datetime(as.character(LocalTime))
         }
         dset$date <- as.Date(dset$datetime,tz = "UTC")
@@ -207,8 +206,8 @@ plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_re
       is.POSIXct <- function(x) inherits(x, "POSIXct")
       fields <- names(ts_df)[sapply(ts_df, is.POSIXct)]
       for(field in fields){
-        LocalTime <- ts_df[[field]] %>% lubridate::ymd_hms(tz="UTC") %>% lubridate::with_tz(tzone=tz)
-        LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(ts_df$datetime,tz = tz)))*24*60*60
+        LocalTime <- .fact2datetime(ts_df[[field]]) %>% lubridate::with_tz(tzone=tz)
+        # LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz=tz)-as.Date(ts_df$datetime,tz = tz)))*24*60*60
         ts_df[[field]] <- LocalTime#RchivalTag:::.fact2datetime(as.character(LocalTime))
       }
       ts_df$date <- as.Date(ts_df$datetime,tz = tz)
@@ -232,8 +231,8 @@ plot_DepthTempTS_resampled <- function(ts_df, y="Depth", z="Temperature", bin_re
       is.POSIXct <- function(x) inherits(x, "POSIXct")
       fields <- names(ts_df)[sapply(ts_df, is.POSIXct)]
       for(field in fields){
-        LocalTime <- ts_df[[field]] %>% lubridate::ymd_hms(tz=tz) %>% lubridate::with_tz(tzone="UTC")
-        LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz="UTC")-as.Date(ts_df$datetime,tz = "UTC")))*24*60*60
+        LocalTime <- .fact2datetime(ts_df[[field]]) %>% lubridate::with_tz(tzone=tz)
+        # LocalTime <- LocalTime - (as.numeric(as.Date(LocalTime,tz="UTC")-as.Date(ts_df$datetime,tz = "UTC")))*24*60*60
         ts_df[[field]] <- LocalTime#RchivalTag:::.fact2datetime(as.character(LocalTime))
       }
       ts_df$date <- as.Date(ts_df$datetime,tz = "UTC")

@@ -108,9 +108,6 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
         j <- j +1
       }
     }
-    save(pols, file="~/Desktop/test.rd")
-    load("~/Desktop/test.rd",verbose = T)
-    stop()
     
     # pols@plotOrder <- spolys@plotOrder
     # rgeos::gBuffer(spTransform(pols, CRS(paste(proj4string(pols)))),0,byid = F)

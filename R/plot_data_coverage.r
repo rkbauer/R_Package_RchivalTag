@@ -67,9 +67,12 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
     for(i in 1:nrow(meta)){
       identifier <- identifiers[i]
       ii <- grep(identifier,tags)
+      print(identifier)
       if(length(ii) > 1) stop("Not unique identifier! Please revise meta file!")
       if(length(ii) > 0){
         dat <- tst[[ii]]
+        save(dat,type2,meta,Identifier,identifier,na.omit,x_dates,m_ts,m,i, file="~/Desktop/test.rd")
+        load("~/Desktop/test.rd")
         sm0 <- plyr::ddply(dat,c("date"),function(x)c(ntot=nrow(x),ndat=nrow(x[!is.na(x[[type2]]),])))
         sm0$perc <- round(100*sm0$ndat/sm0$ntot,1)
         a <- meta[which(meta[[Identifier]] == identifier),]
