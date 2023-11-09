@@ -24,7 +24,7 @@ abacus_plot <- plot_data_coverage <- function(x, type, type2, meta,
   if(length(pal) == 1) pal <- cmap[[pal]]
   
   if(missing(meta)) stop("meta data missing, please revise!")
-  if(!extends(class(meta), 'data.frame')) stop("meta data not of class 'data.frame'. Please revise!")
+  if(!is(meta, 'data.frame')) stop("meta data not of class 'data.frame'. Please revise!")
   meta[[Identifier]] <- as.character( meta[[Identifier]])
   identifiers <- meta[[Identifier]]
   

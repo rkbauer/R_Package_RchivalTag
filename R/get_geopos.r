@@ -88,7 +88,7 @@ get_geopos <- function(x, xlim, ylim, date_format, lang_format="en", tz="UTC", p
       cl <- try(raster::rasterToContour(Raster.HR,levels = Raster.breaks),silent = T)
       
       cl0 <- cl
-      if(!extends(class(cl), 'try-error')){
+      if(!is(cl, 'try-error')){
         
         ## new approach
         if(length(cl@lines) > 1 | length(cl@lines[[1]]@Lines) > 1) warning("polygon conversion incomplete, please contact package author")

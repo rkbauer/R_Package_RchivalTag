@@ -13,7 +13,7 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
     warning("user specified alpha-value > 100%, resetting to 100%!")
   }
   
-  if(missing(date_format) & extends(class(x)[1], 'SpatialPolygonsDataFrame')) date_format <- "%d-%b-%Y %H:%M:%S"
+  if(missing(date_format) & is(x,"SpatialPolygonsDataFrame")) date_format <- "%d-%b-%Y %H:%M:%S"
   
   if(is.character(x)) {
     if(substr(x,nchar(x)-3,nchar(x)) == ".nc") date_format <- "%Y-%m-%d %H:%M:%S"
@@ -140,7 +140,7 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
     b <- ggobj
     
   }else{
-    if(extends(class(x), 'SpatialPolygonsDataFrame')){
+    if(is(x,"SpatialPolygonsDataFrame")){
       pos <- x
       required_fields <- c('Serial','DeployID','Ptt','datetime')
       missing_fields <- required_fields[which(!(required_fields %in% names(pos)))]

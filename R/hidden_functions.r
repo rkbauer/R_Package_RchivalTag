@@ -92,7 +92,7 @@
 .num2month <- function(m,english=T,abbrev=F){
   if(english) lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
   dat <- m
-  if(!extends(class(m), 'Date')) dat <- as.Date(paste0("2012-",m,"-1"))
+  if(!is(m,"Date")) dat <- as.Date(paste0("2012-",m,"-1"))
   Dat <- format(as.Date(dat),"%B")
   if(abbrev) Dat <- format(as.Date(dat),"%b")
   return(Dat)
