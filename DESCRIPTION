@@ -6,8 +6,8 @@ Date: 2023-10-19
 Author: Robert K. Bauer
 Maintainer: Robert K. Bauer <rkbauer@hawaii.edu>
 Description: A set of functions to generate, access and analyze standard data products from archival tagging data.
-Depends: R (>= 3.5.0), maps, mapdata, oceanmap, leaflet
-Imports: plyr, cleangeo, suntools, graphics, stats, raster, readr, ncdf4, pracma, dygraphs, xts, lubridate, shiny, htmlwidgets, stringr, grDevices, sp, methods, ggplot2, ggedit, plotly, leaflet.extras2, sf
+Depends: R (>= 3.5.0), maps, mapdata, leaflet
+Imports: plyr, oceanmap, cleangeo, suntools, graphics, stats, raster, readr, ncdf4, pracma, dygraphs, xts, lubridate, shiny, htmlwidgets, stringr, grDevices, sp, methods, ggplot2, ggedit, plotly, leaflet.extras2, sf
 License: GPL (>= 3)
 LazyLoad: yes
 Packaged: 2023-10-19 19:52:14 UTC; work

@@ -23,10 +23,10 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     }
   }
   
-  m <- leaflet(data,elementId = mapID) %>%
-    addTiles(group = "OSM (default)") %>%
-    addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
-    addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
+  m <- leaflet::leaflet(data,elementId = mapID) %>%
+    leaflet::addTiles(group = "OSM (default)") %>%
+    leaflet::addProviderTiles(providers$Esri.OceanBasemap, group = "Esri.OceanBasemap") %>%
+    leaflet::addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery")
   
   if(colorby != "date"){
     data$ID <- data[[ID_label]]
@@ -37,7 +37,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     data <- .make_labels(data,ID_label="IDnm",add_label=add_label, except_label=except_label)
     labs <- as.list(data$X)
     
-    if(is(df,"data.frame")){
+    if(is(data,"data.frame")){
       for(id in ids){
         add <- data[which(data[[ID_label]] == id),]
         add <- add[order(add$IDnm),]
@@ -58,18 +58,18 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
     ltitle <- gsub("mapID",mapID,ltitle)
 
     m <- m %>%
-      onRender(ltitle)
+      htmlwidgets::onRender(ltitle)
 
   }else{
     data$datenm <- as.numeric(as.Date(data$datetime))
-    cpal = colorNumeric(palette = pal, domain = data$datenm) 
+    cpal = leaflet::colorNumeric(palette = pal, domain = data$datenm) 
     data <- .make_labels(data,ID_label=ID_label,add_label=add_label, except_label=except_label)
     labs <- as.list(data$X)
     
     if(showSlideBar) {
       labs <- data$X
       
-      if(is(df,"data.frame")){
+      if(is(data,"data.frame")){
         data <- SpatialPointsDataFrame(data=data,data[,c("Lon","Lat")])
         data <- sf::st_as_sf(data)
         data <- st_cast(data, "POINT")
@@ -102,7 +102,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
         }
       }
       
-      if(is(df,"data.frame")){
+      if(is(data,"data.frame")){
         for(id in ids){
           add <- data[which(data[[ID_label]] == id),]
           add <- add[order(add$datetime),]
@@ -129,7 +129,7 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
       ltitle <- gsub("mapID",mapID,ltitle)
       
       m <- m %>%
-        onRender(ltitle)
+        htmlwidgets::onRender(ltitle)
     }
     
     m <- m %>% 
@@ -137,9 +137,9 @@ leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, co
                          title = cb.title, opacity = 1, 
                          labFormat = .myLabelFormat(dates=TRUE)) 
   }
-  if(showScaleBar) m <- m %>% addScaleBar('bottomright') 
+  if(showScaleBar) m <- m %>% leaflet::addScaleBar('bottomright') 
   m <- m %>%
-    addLayersControl(
+    leaflet::addLayersControl(
       baseGroups = c("OSM (default)", "Esri.OceanBasemap", "Esri.WorldImagery"),
       overlayGroups = overlayGroups,
       options = layersControlOptions(collapsed = collapsedLayers)
