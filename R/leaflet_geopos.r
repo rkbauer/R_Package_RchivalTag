@@ -1,4 +1,4 @@
-leaflet_geopos2 <- function(data, ID_label, add_label=NULL, except_label=NULL, collapsedLayers=TRUE,
+leaflet_geopos <- function(data, ID_label, add_label=NULL, except_label=NULL, collapsedLayers=TRUE,
                            radius=1000, pal, layer_title=ID_label, colorby="date", cb.title, cbpos="bottomright",
                            showScaleBar=TRUE, showSlideBar=FALSE){
   if(missing(cb.title)) cb.title <- stringr::str_to_title(colorby)
@@ -41,7 +41,7 @@ leaflet_geopos2 <- function(data, ID_label, add_label=NULL, except_label=NULL, c
       for(id in ids){
         add <- data[which(data[[ID_label]] == id),]
         add <- add[order(add$IDnm),]
-        m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$IDnm),
+        m <- m %>% leaflet::addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$IDnm),
                               label = lapply(labs, shiny::HTML),radius =radius, group = id)
       }
     }
@@ -79,7 +79,7 @@ leaflet_geopos2 <- function(data, ID_label, add_label=NULL, except_label=NULL, c
         data$time <- data$datetime
       }
       
-      m <- m %>% addTimeslider(data = data, color = ~cpal(data$datenm),
+      m <- m %>% leaflet.extras2::addTimeslider(data = data, color = ~cpal(data$datenm),
                                # opacity = opac, fillOpacity = opac,
                                # radius = sample(5:15, nrow(data), TRUE),
                                popupOptions = popupOptions(maxWidth = 1000, closeOnClick= F, closeButton = FALSE),
@@ -106,16 +106,16 @@ leaflet_geopos2 <- function(data, ID_label, add_label=NULL, except_label=NULL, c
         for(id in ids){
           add <- data[which(data[[ID_label]] == id),]
           add <- add[order(add$datetime),]
-          m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
+          m <- m %>% leaflet::addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
                                 label = lapply(labs, shiny::HTML),radius =radius, group = id)
         }
       }
       
-      if(is(data,"SpatialPolygonsDataFrame")){
+      if(is(data,"SpatialPointsDataFrame")){
         for(id in ids){
           add <- data[which(data[[ID_label]] == id),]
           add <- add[order(add$datetime),]
-          m <- m %>% addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
+          m <- m %>% leaflet::addCircles(lng = add$Lon, lat =add$Lat, color = ~cpal(add$datenm),
                                 label = lapply(labs, shiny::HTML),radius =radius, group = id)
         }
       }
