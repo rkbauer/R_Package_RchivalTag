@@ -1,8 +1,8 @@
 Package: RchivalTag
 Type: Package
 Title: Analyzing and Interactive Visualization of Archival Tagging Data
-Version: 0.1.9
-Date: 2023-11-10
+Version: 0.2.0
+Date: 2024-03-22
 Author: Robert K. Bauer
 Maintainer: Robert K. Bauer <rkbauer@hawaii.edu>
 Description: A set of functions to generate, access and analyze standard data products from archival tagging data.
@@ -10,7 +10,7 @@ Depends: R (>= 3.5.0), maps, mapdata, leaflet
 Imports: plyr, oceanmap, cleangeo, suntools, graphics, stats, raster, readr, ncdf4, pracma, dygraphs, xts, lubridate, shiny, htmlwidgets, stringr, grDevices, sp, methods, ggplot2, ggedit, plotly, leaflet.extras2, sf
 License: GPL (>= 3)
 LazyLoad: yes
-Packaged: 2023-11-10 09:26:45 UTC; work
+Packaged: 2024-03-22 09:31:42 UTC; work
 Repository: CRAN
-Date/Publication: 2023-11-10 09:38:47
+Date/Publication: 2024-03-22 09:41:25
 NeedsCompilation: no

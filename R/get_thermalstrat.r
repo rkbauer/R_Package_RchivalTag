@@ -53,23 +53,24 @@ get_thermalstrat <- function(x, dz=20, strat_lim=100, na.rm=FALSE, verbose=TRUE,
         d2 <- min(grads$Depth[which(grads$dT == max(grads$dT))]) # select depth of beginning of maximum gradient
         mld[i] <- d2-dz/2
       }
-      temp_interp2 <- interpolate_TempDepthProfiles(ts = data.frame(Depth=Depth[j], Temp=Temperature_matrix[j, i], date=x$Date[i]),
-                                                    Temp_field = 'Temp', #return_as_matrix = T,
-                                                    Depth_res = 1, verbose = F)[[1]]
-      temp_mld <- data.frame(Depth=temp_interp2$Depth, Temp=temp_interp2$Temperature_matrix)
-      temp_mld <- temp_mld[which(!is.na(temp_mld$Temp)), ]
-      
-      ct0.5 <- abs(temp_mld$Temp-(temp_mld$Temp[1]-0.5))
-      kk <- which(ct0.5 == min(ct0.5))
-      if((length(ct0.5) > 0) & (length(kk) > 0)) mld_0.5[i] <- temp_mld$Depth[kk][1]  # temperature criterion of Monterey and Levitus (1997)
-      
-      ct0.8 <- abs(temp_mld$Temp-(temp_mld$Temp[1]-0.8))
-      kk <- which(ct0.8 == min(ct0.8))
-      if((length(ct0.8) > 0) & (length(kk) > 0)) mld_0.8[i] <- temp_mld$Depth[kk][1]  # temperature criterion of Kara et al. (2000, 2003)          
-      
-      #     plot(grads$dT, grads$Depth, ylim=rev(range(grads$Depth)), main='Temp gradient per Depth')
-      #     abline(h=tcline)
-      
+      if(length(j) > 1){ ## interpolation requires at least 2 values!
+        temp_interp2 <- interpolate_TempDepthProfiles(ts = data.frame(Depth=Depth[j], Temp=Temperature_matrix[j, i], date=x$Date[i]),
+                                                      Temp_field = 'Temp', #return_as_matrix = T,
+                                                      Depth_res = 1, verbose = F)[[1]]
+        temp_mld <- data.frame(Depth=temp_interp2$Depth, Temp=temp_interp2$Temperature_matrix)
+        temp_mld <- temp_mld[which(!is.na(temp_mld$Temp)), ]
+        
+        ct0.5 <- abs(temp_mld$Temp-(temp_mld$Temp[1]-0.5))
+        kk <- which(ct0.5 == min(ct0.5))
+        if((length(ct0.5) > 0) & (length(kk) > 0)) mld_0.5[i] <- temp_mld$Depth[kk][1]  # temperature criterion of Monterey and Levitus (1997)
+        
+        ct0.8 <- abs(temp_mld$Temp-(temp_mld$Temp[1]-0.8))
+        kk <- which(ct0.8 == min(ct0.8))
+        if((length(ct0.8) > 0) & (length(kk) > 0)) mld_0.8[i] <- temp_mld$Depth[kk][1]  # temperature criterion of Kara et al. (2000, 2003)          
+        
+        #     plot(grads$dT, grads$Depth, ylim=rev(range(grads$Depth)), main='Temp gradient per Depth')
+        #     abline(h=tcline)
+      }
       #     plot(Temperature_matrix[, i], Depth, ylim=rev(range(Depth[j])), main='Temp per Depth')
       #     abline(h=tcline)
     }

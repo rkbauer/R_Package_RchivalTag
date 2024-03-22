@@ -3,6 +3,9 @@ RchivalTag versions
 upcoming:
 	- add argument "show_time_limits" in plot_TS/DepthTS
 
+RchivalTag_0.2.0 -- March 22, 2023 (Robert Bauer)
+	- adjusting get_thermalstrat-function for temperature profiles with daily gaps 
+
 RchivalTag_0.1.8 -- October 19, 2023 (Robert Bauer)
 	- fixing references to oceanmap package in documentation
 
