@@ -148,7 +148,7 @@ ggboxplot_DepthTS_by_hour <- function(ts_df, ylim, min_perc=75,
     ggobj <- ggplot(df) + 
       coord_cartesian(xlim =xlim, ylim =ylim) +
       scale_x_discrete(expand = c(0,0)) +
-      scale_y_continuous(expand = c(0,0)) +
+      scale_y_continuous(expand = c(0,0),trans = "reverse") +
       geom_boxplot(aes_string(y="Depth",x="hour"),outlier.shape=NA)
     # ggobj <- ggobj + geom_rect(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf, fill="grey", color=NA, alpha=.5, size=0)
     ggobj <- ggobj + 

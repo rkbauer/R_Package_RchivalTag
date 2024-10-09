@@ -3,7 +3,10 @@ RchivalTag versions
 upcoming:
 	- add argument "show_time_limits" in plot_TS/DepthTS
 
-RchivalTag_0.2.0 -- March 22, 2023 (Robert Bauer)
+RchivalTag_0.2.1 -- October 10, 2024 (Robert Bauer)
+	- bug fix due to dependency on scale_y_continuous-function of the ggplot2-package
+
+RchivalTag_0.2.0 -- March 22, 2024 (Robert Bauer)
 	- adjusting get_thermalstrat-function for temperature profiles with daily gaps 
 
 RchivalTag_0.1.8 -- October 19, 2023 (Robert Bauer)
