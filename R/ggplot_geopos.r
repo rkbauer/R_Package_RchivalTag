@@ -39,7 +39,11 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
     
     if(missing(xlim)) xlim <- range(pos$Lon+c(.5,-.5))
     if(missing(ylim)) ylim <- range(pos$Lat+c(.5,-.5))
-    if(missing(ggobj)) ggobj <- oceanmap::ggplotmap(xlim=xlim, ylim=ylim, ...)
+    if(missing(ggobj)) ggobj <- try(oceanmap::ggplotmap(xlim=xlim, ylim=ylim, ...),silent = T)
+    if(inherits(ggobj, "try-error")){
+      warning('ggplotmap call failed. Please check the parameters and consider providing explicit values for `xlim` and `ylim`, \nas the function works only when any landscape lies within the boundaries of `xlim` and `ylim`.')
+      ggobj <- ggplot2::ggplot(xlim=xlim, ylim=ylim, ...)
+    }
     
     if(color_by %in% c("date")){
       
@@ -86,10 +90,13 @@ ggplot_geopos <- function(x, ggobj, xlim, ylim, zlim, standard_year=FALSE, full_
 
       ## find best ID label:
       ID_Labels <- as.data.frame(cmb[1,c("DeployID","Serial","Ptt")])
-      ID_Labels <- names(ID_Labels[,which(apply(ID_Labels,2,function(x)!is.na(x)))])
-      smLabels <- as.vector(apply(cmb[,c(ID_Labels)], 2, function(x) length(unique(x))))
-      ID_Label <- ID_Labels[which(smLabels == max(smLabels))][1]
-        
+      ID_Labels <- names(ID_Labels)[!is.na(ID_Labels[1, ])]
+      if(length(ID_Labels) > 1){
+        smLabels <- as.vector(apply(cmb[,c(ID_Labels)], 2, function(x) length(unique(x))))
+        ID_Label <- ID_Labels[which(smLabels == max(smLabels))][1]
+      }else{
+        ID_Label <- ID_Labels
+      }
       # for(co in ID_Labels) cmb[[co]] <- paste0(co,": ",cmb[[co]],"\n")
       
       # cmb$ID_label <- apply( cmb[ , ID_Labels ] , 1 , paste , collapse = "" )
